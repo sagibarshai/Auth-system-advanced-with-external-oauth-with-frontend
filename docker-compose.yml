@@ -17,6 +17,7 @@ services:
       - "${PORT}:${PORT}"
     volumes:
       - ./backend:/usr/app
+      - /usr/app/node_modules
 
   db:
     image: postgres
