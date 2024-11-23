@@ -1,6 +1,14 @@
 version: "3.8"
 
 services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/usr/app
+      - /usr/app/node_modules
+
   backend:
     build: ./backend
     depends_on:
