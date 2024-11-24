@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { signUpController } from "./controller";
 import { body } from "express-validator";
-import { formattedPhoneRegex } from "../../../utils/regex/phone-number";
 import { requestValidationMiddleware } from "../../../middlewares/request-validation";
 
 const router = Router();
@@ -10,7 +9,7 @@ router.post(
   "/signUp",
   body("firstName").optional().isLength({ min: 2, max: 40 }).withMessage("First name should be with 2 - 40 characters"),
   body("lastName").optional().isLength({ min: 2, max: 40 }).withMessage("Last name should be with 2 - 40 characters"),
-  body("phoneNumber").optional().matches(formattedPhoneRegex).withMessage("Phone number must be in this structure : +YYYYXXXXXXXX"),
+  body("phoneNumber").optional().isMobilePhone("he-IL").withMessage("Phone number should be from IL and valid"),
   body("email").isEmail().withMessage("Email should be exist and in a valid structure"),
   body("password")
     .isStrongPassword({ minLowercase: 1, minNumbers: 1, minSymbols: 1, minUppercase: 1 })

@@ -11,7 +11,7 @@ export const currentUserMiddleware = async (req: Request, res: Response, next: N
     } else {
       const safeUser = verifyToken(token);
       if (safeUser) {
-        refreshTokenAndSetCookie(token, req); // Generate and set a new token in the session to extend the user's session (similar to a refresh token)
+        refreshTokenAndSetCookie(token, req); // Generate and set a new token for the "Refresh token"
         req.currentUser = safeUser;
       }
     }
