@@ -39,6 +39,12 @@ if (!process.env.GOOGLE_CLIENT_ID) {
 if (!process.env.GOOGLE_CALLBACK_ENDPOINT) {
   throw new Error("GOOGLE_CALLBACK_ENDPOINT must be define inside .env file");
 }
+if (!process.env.GOOGLE_SUCCESS_REDIRECT) {
+  throw new Error("GOOGLE_SUCCESS_REDIRECT must be define inside .env file");
+}
+if (!process.env.GOOGLE_FAILURE_REDIRECT) {
+  throw new Error("GOOGLE_FAILURE_REDIRECT must be define inside .env file");
+}
 if (!process.env.JWT_EXPIRED_IN) {
   console.warn("JWT_EXPIRED_IN can be define inside .env file");
 }
@@ -87,5 +93,7 @@ export const config = {
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     GOOGLE_CALLBACK_URL: `${baseURL}:${port}${process.env.GOOGLE_CALLBACK_ENDPOINT}`,
+    GOOGLE_SUCCESS_REDIRECT: process.env.GOOGLE_SUCCESS_REDIRECT,
+    GOOGLE_FAILURE_REDIRECT: process.env.GOOGLE_FAILURE_REDIRECT,
   },
 };

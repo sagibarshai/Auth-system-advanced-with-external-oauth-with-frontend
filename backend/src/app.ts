@@ -3,6 +3,7 @@ import express from "express";
 import cookieSession from "cookie-session";
 import { json } from "body-parser";
 import "dotenv/config";
+import cors from "cors";
 
 import { config } from "./config";
 import { errorMiddleware } from "./middlewares/errors";
@@ -13,6 +14,8 @@ import { pgClient } from "./database/init";
 const app = express();
 
 app.use(json());
+
+app.use(cors());
 
 app.use(helmet());
 
