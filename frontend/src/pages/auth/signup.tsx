@@ -6,10 +6,14 @@ import TextInput from "../../components/inputs/text";
 import { Props as InputProps } from "../../components/inputs/types";
 import { useInput } from "../../hooks/use-input";
 import { emailRegex, onlyNumbersRegex, phoneRegex, strongPasswordRegex } from "../../utils/regex";
-import PhoneInput from "../../components/inputs/phone";
+import PhoneInput, { Props as PhoneInputProps } from "../../components/inputs/phone";
+import { PasswordInput } from "../../components/inputs/password";
+import { useRequest } from "../../hooks/use-request";
+import { backendAxiosInstance } from "../../api/backend-service/backend-axios-instance";
+import { AuthEndPoints } from "../../api/backend-service/endpoints";
 
 const SignupForm: React.FC = () => {
-  const [firstNameState, setFirstName, firstNameStatics] = useInput({
+  const [firstNameState, setFirstName, firstNameStatics] = useInput<InputProps>({
     stateProps: { isValid: false, showError: false, value: "" },
     staticsProps: {
       errorMsg: "First name should be with 2 - 40 characters ",
@@ -19,7 +23,7 @@ const SignupForm: React.FC = () => {
     },
   });
 
-  const [lastNameState, setLastName, lastNameStatics] = useInput({
+  const [lastNameState, setLastName, lastNameStatics] = useInput<InputProps>({
     stateProps: { isValid: false, showError: false, value: "" },
     staticsProps: {
       errorMsg: "Last name should be with 2 - 40 characters ",
@@ -29,7 +33,7 @@ const SignupForm: React.FC = () => {
     },
   });
 
-  const [emailState, setEmail, emailStatics] = useInput({
+  const [emailState, setEmail, emailStatics] = useInput<InputProps>({
     stateProps: { isValid: false, showError: false, value: "" },
     staticsProps: {
       errorMsg: "Email should be in a valid structure",
@@ -38,7 +42,7 @@ const SignupForm: React.FC = () => {
     },
   });
 
-  const [passwordState, setPassword, passwordStatics] = useInput({
+  const [passwordState, setPassword, passwordStatics] = useInput<InputProps>({
     stateProps: { isValid: false, showError: false, value: "" },
     staticsProps: {
       errorMsg: "Password should contain at least 1 symbol, 1 uppercase, 1 lowercase, 1 number and contain 6 - 30 characters",
@@ -52,11 +56,12 @@ const SignupForm: React.FC = () => {
         })),
     },
   });
-  const [phoneNumberState, setPhoneNumber, phoneNumberStatics] = useInput({
+  const [phoneNumberState, setPhoneNumber, phoneNumberStatics] = useInput<PhoneInputProps>({
     stateProps: { isValid: false, showError: false, value: "" },
     staticsProps: {
       errorMsg: "Phone number should be from IL and valid",
       label: "Phone number",
+      countryCode: "+972",
       onChange: (value) => {
         const updatedValue = value.match(onlyNumbersRegex) && value.length <= 10 ? value : phoneNumberState.value;
 
@@ -69,6 +74,25 @@ const SignupForm: React.FC = () => {
       },
     },
   });
+
+  const { data, error, fetchData, loading } = useRequest({
+    config: {
+      method: "post",
+      url: AuthEndPoints["SIGNUP"],
+      data: {
+        firstName: firstNameState.value,
+        lastName: lastNameState.value,
+        email: emailState.value,
+        phoneNumber: phoneNumberState.value,
+        password: passwordState.value,
+      },
+    },
+    axiosInstance: backendAxiosInstance,
+  });
+
+  console.log("error ", error);
+  console.log("data ", data);
+  console.log("loading ", loading);
 
   return (
     <Container
@@ -107,13 +131,13 @@ const SignupForm: React.FC = () => {
 
           {/* Password */}
           <Grid item xs={12}>
-            <TextInput stateProps={passwordState} staticsProps={passwordStatics} />
+            <PasswordInput stateProps={passwordState} staticsProps={passwordStatics} />
           </Grid>
 
           {/* Submit Button */}
           <Grid item xs={12}>
-            <Button fullWidth variant="contained" color="primary" type="submit" sx={{ marginTop: 2 }}>
-              Sign Up
+            <Button fullWidth variant="contained" color="primary" type="submit" sx={{ marginTop: 2 }} onClick={fetchData}>
+              {loading ? "Loading..." : "Sign Up"}
             </Button>
           </Grid>
         </Grid>

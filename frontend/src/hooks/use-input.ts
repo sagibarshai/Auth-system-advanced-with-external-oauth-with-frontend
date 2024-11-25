@@ -1,12 +1,18 @@
 import { useMemo, useState } from "react";
-import { Props as InputProps } from "../components/inputs/types";
 
-export const useInput = ({
+type ObjectKey = string | number;
+
+interface Props {
+  staticsProps: Record<ObjectKey, any>;
+  stateProps: Record<ObjectKey, any>;
+}
+
+export const useInput = <T extends Props>({
   stateProps,
   staticsProps,
-}: InputProps): [InputProps["stateProps"], React.Dispatch<React.SetStateAction<InputProps["stateProps"]>>, InputProps["staticsProps"]] => {
+}: T): [T["stateProps"], React.Dispatch<React.SetStateAction<T["stateProps"]>>, T["staticsProps"]] => {
   const statics = useMemo(() => ({ ...staticsProps }), [staticsProps]);
-  const [state, setState] = useState<InputProps["stateProps"]>(stateProps);
+  const [state, setState] = useState<T["stateProps"]>(stateProps);
 
   return [state, setState, statics];
 };

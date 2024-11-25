@@ -62,7 +62,7 @@ export const config = {
   PROD: isProd,
   BASE_URL: baseURL,
   JWT: {
-    EXPIRED_IN: Number(process.env.JWT_EXPIRED_IN) || 60 * 30, // in 's'
+    EXPIRED_IN: Number(process.env.JWT_EXPIRED_IN) || 60 * 30, // in 'sec'
   },
   COOKIES: {
     JWT_COOKIE_EXPIRED_IN: Number(process.env.COOKIES_EXPIRED_IN) || 60 * 60 * 1000, // in 'ms'
