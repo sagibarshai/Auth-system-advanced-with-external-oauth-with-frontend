@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { Container, TextField, Button, Typography, Box, Grid, InputAdornment, IconButton } from "@mui/material";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import React from "react";
+import { Container, Button, Typography, Box, Grid } from "@mui/material";
+
 import TextInput from "../../components/inputs/text";
 import { Props as InputProps } from "../../components/inputs/types";
 import { useInput } from "../../hooks/use-input";
