@@ -2,6 +2,8 @@ version: "3.8"
 
 services:
   frontend:
+    environment:
+      BACKEND_PORT: ${BACKEND_PORT}
     build: ./frontend
     ports:
       - "5173:5173"
@@ -10,11 +12,28 @@ services:
       - /usr/app/node_modules
 
   backend:
+    environment:
+      BACKEND_PORT: ${BACKEND_PORT}
+      JWT_KEY: ${JWT_KEY}
+      COOKIE_SECRET: ${COOKIE_SECRET}
+      EMAIL_ADDRESS: ${EMAIL_ADDRESS}
+      EMAIL_ACCESS_KEY: ${EMAIL_ACCESS_KEY}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_CALLBACK_ENDPOINT: ${GOOGLE_CALLBACK_ENDPOINT}
+      GOOGLE_SUCCESS_REDIRECT: ${GOOGLE_SUCCESS_REDIRECT}
+      GOOGLE_FAILURE_REDIRECT: ${GOOGLE_FAILURE_REDIRECT}
     build: ./backend
     depends_on:
       - db
     ports:
-      - "${PORT}:${PORT}"
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
     volumes:
       - ./backend:/usr/app
       - /usr/app/node_modules

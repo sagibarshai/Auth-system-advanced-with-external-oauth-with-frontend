@@ -1,7 +1,10 @@
 import "dotenv/config";
 
+if (!process.env.BACKEND_PORT) {
+  throw new Error("BACKEND_PORT must be define inside .env file");
+}
 if (!process.env.JWT_KEY) {
-  throw new Error("PASSWORD_SALT must be define inside .env file");
+  throw new Error("JWT_KEY must be define inside .env file");
 }
 if (!process.env.COOKIE_SECRET) {
   throw new Error("COOKIE_SECRET must be define inside .env file");
@@ -55,7 +58,7 @@ if (!process.env.COOKIES_EXPIRED_IN) {
 const isProd = Boolean(process.env.NODE_ENV);
 
 const baseURL = isProd ? "https://ProductionDomainUrl.com" : "http://localhost";
-const port = Number(process.env.PORT);
+const port = Number(process.env.BACKEND_PORT);
 
 export const config = {
   PORT: port,
