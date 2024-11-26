@@ -1,20 +1,26 @@
 import React from "react";
 import { Container, Button, Typography, Box, Grid } from "@mui/material";
 
-import TextInput from "../../components/inputs/text";
-import { Props as InputProps } from "../../components/inputs/types";
-import { useInput } from "../../hooks/use-input";
-import { emailRegex, onlyNumbersRegex, phoneRegex, strongPasswordRegex } from "../../utils/regex";
 import PhoneInput, { Props as PhoneInputProps } from "../../components/inputs/phone";
-import { PasswordInput } from "../../components/inputs/password";
+import TextInput from "../../components/inputs/text";
+import PasswordInput from "../../components/inputs/password";
+
+import { useInput } from "../../hooks/use-input";
 import { useRequest } from "../../hooks/use-request";
+
+import { emailRegex, onlyNumbersRegex, phoneRegex, strongPasswordRegex } from "../../utils/regex";
+
 import { backendAxiosInstance } from "../../api/backend-service/backend-axios-instance";
 import { AuthEndPoints } from "../../api/backend-service/endpoints";
+
+import { Props as InputProps } from "../../components/inputs/text";
+import { useForm } from "../../hooks/use-form";
 
 const SignupForm: React.FC = () => {
   const [firstNameState, setFirstName, firstNameStatics] = useInput<InputProps>({
     stateProps: { isValid: false, showError: false, value: "" },
     staticsProps: {
+      required: false,
       errorMsg: "First name should be with 2 - 40 characters ",
       label: "First name",
       onChange: (value) =>
@@ -25,6 +31,7 @@ const SignupForm: React.FC = () => {
   const [lastNameState, setLastName, lastNameStatics] = useInput<InputProps>({
     stateProps: { isValid: false, showError: false, value: "" },
     staticsProps: {
+      required: false,
       errorMsg: "Last name should be with 2 - 40 characters ",
       label: "Last name",
       onChange: (value) =>
@@ -35,6 +42,7 @@ const SignupForm: React.FC = () => {
   const [emailState, setEmail, emailStatics] = useInput<InputProps>({
     stateProps: { isValid: false, showError: false, value: "" },
     staticsProps: {
+      required: true,
       errorMsg: "Email should be in a valid structure",
       label: "Email",
       onChange: (value) => setEmail((prev) => ({ ...prev, value, isValid: Boolean(value.match(emailRegex)), showError: true })),
@@ -44,6 +52,7 @@ const SignupForm: React.FC = () => {
   const [passwordState, setPassword, passwordStatics] = useInput<InputProps>({
     stateProps: { isValid: false, showError: false, value: "" },
     staticsProps: {
+      required: true,
       errorMsg: "Password should contain at least 1 symbol, 1 uppercase, 1 lowercase, 1 number and contain 6 - 30 characters",
       label: "Password",
       onChange: (value) =>
@@ -56,8 +65,9 @@ const SignupForm: React.FC = () => {
     },
   });
   const [phoneNumberState, setPhoneNumber, phoneNumberStatics] = useInput<PhoneInputProps>({
-    stateProps: { isValid: false, showError: false, value: "" },
+    stateProps: { isValid: true, showError: false, value: "" },
     staticsProps: {
+      required: false,
       errorMsg: "Phone number should be from IL and valid",
       label: "Phone number",
       countryCode: "+972",
@@ -67,7 +77,7 @@ const SignupForm: React.FC = () => {
         setPhoneNumber((prev) => ({
           ...prev,
           value: updatedValue,
-          isValid: Boolean(updatedValue.match(phoneRegex)),
+          isValid: !updatedValue || Boolean(updatedValue.match(phoneRegex)),
           showError: true,
         }));
       },
@@ -89,21 +99,11 @@ const SignupForm: React.FC = () => {
     axiosInstance: backendAxiosInstance,
   });
 
-  console.log("error ", error);
-  console.log("data ", data);
-  console.log("loading ", loading);
+  const { isFormValid } = useForm({ inputs: [firstNameState, lastNameState, emailState, passwordState, phoneNumberState] });
 
   return (
-    <Container
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        width: "100vw",
-      }}
-    >
-      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+    <Container disableGutters>
+      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", gap: "48px" }}>
         <Typography variant="h4" gutterBottom>
           Sign Up
         </Typography>
@@ -118,14 +118,14 @@ const SignupForm: React.FC = () => {
             <TextInput stateProps={lastNameState} staticsProps={lastNameStatics} />
           </Grid>
 
-          {/* Email */}
-          <Grid item xs={12}>
-            <TextInput stateProps={emailState} staticsProps={emailStatics} />
-          </Grid>
-
           {/* Phone Number */}
           <Grid item xs={12}>
             <PhoneInput stateProps={phoneNumberState} staticsProps={phoneNumberStatics} />
+          </Grid>
+
+          {/* Email */}
+          <Grid item xs={12}>
+            <TextInput stateProps={emailState} staticsProps={emailStatics} />
           </Grid>
 
           {/* Password */}
@@ -135,7 +135,7 @@ const SignupForm: React.FC = () => {
 
           {/* Submit Button */}
           <Grid item xs={12}>
-            <Button fullWidth variant="contained" color="primary" type="submit" sx={{ marginTop: 2 }} onClick={fetchData}>
+            <Button fullWidth variant="contained" color="primary" type="submit" sx={{ marginTop: 2 }} onClick={fetchData} disabled={!isFormValid}>
               {loading ? "Loading..." : "Sign Up"}
             </Button>
           </Grid>

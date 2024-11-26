@@ -8,7 +8,7 @@ export interface Props extends Omit<BaseInputProps, "statics"> {
 }
 
 const PhoneInput: React.FC<Props> = ({ stateProps, staticsProps }) => {
-  const { errorMsg, label, onChange, countryCode } = staticsProps;
+  const { errorMsg, label, onChange, required, countryCode } = staticsProps;
   const { isValid, showError, value } = stateProps;
 
   if (countryCode.length < 2 || countryCode.length > 4)
@@ -16,6 +16,7 @@ const PhoneInput: React.FC<Props> = ({ stateProps, staticsProps }) => {
 
   return (
     <TextField
+      required={required}
       helperText={!isValid && showError ? errorMsg : ""}
       error={!isValid && showError}
       value={value}

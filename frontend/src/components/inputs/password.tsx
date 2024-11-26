@@ -5,15 +5,16 @@ import { useState } from "react";
 
 export interface Props extends BaseInputProps {}
 
-export const PasswordInput: React.FC<Props> = ({ stateProps, staticsProps }) => {
+const PasswordInput: React.FC<Props> = ({ stateProps, staticsProps }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const { errorMsg, label, onChange } = staticsProps;
+  const { errorMsg, label, onChange, required } = staticsProps;
   const { isValid, showError, value } = stateProps;
 
   const handleShowPasswordToggle = () => setShowPassword((prev) => !prev);
 
   return (
     <TextField
+      required={required}
       helperText={!isValid && showError ? errorMsg : ""}
       error={!isValid && showError}
       value={value}
@@ -33,3 +34,4 @@ export const PasswordInput: React.FC<Props> = ({ stateProps, staticsProps }) => 
     />
   );
 };
+export default PasswordInput;
