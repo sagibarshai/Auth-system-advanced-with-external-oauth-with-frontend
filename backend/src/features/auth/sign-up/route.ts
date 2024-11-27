@@ -7,9 +7,9 @@ const router = Router();
 
 router.post(
   "/signUp",
-  body("firstName").optional().isLength({ min: 2, max: 40 }).withMessage("First name should be with 2 - 40 characters"),
-  body("lastName").optional().isLength({ min: 2, max: 40 }).withMessage("Last name should be with 2 - 40 characters"),
-  body("phoneNumber").optional().isMobilePhone("he-IL").withMessage("Phone number should be from IL and valid"),
+  body("firstName").optional({ nullable: true }).isLength({ min: 2, max: 40 }).withMessage("First name should be with 2 - 40 characters"),
+  body("lastName").optional({ nullable: true }).isLength({ min: 2, max: 40 }).withMessage("Last name should be with 2 - 40 characters"),
+  body("phoneNumber").optional({ nullable: true }).isMobilePhone("he-IL").withMessage("Phone number should be from IL and valid"),
   body("email").isEmail().withMessage("Email should be exist and in a valid structure"),
   body("password")
     .isStrongPassword({ minLowercase: 1, minNumbers: 1, minSymbols: 1, minUppercase: 1 })

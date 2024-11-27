@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Container, Button, Typography, Box, Grid } from "@mui/material";
+import React from "react";
+import { Container, Button, Typography, Box, Grid, FormControl } from "@mui/material";
 
 import PhoneInput, { Props as PhoneInputProps } from "../../components/inputs/phone";
 import TextInput from "../../components/inputs/text";
@@ -10,15 +10,17 @@ import { useRequest } from "../../hooks/use-request";
 
 import { emailRegex, onlyNumbersRegex, phoneRegex, strongPasswordRegex } from "../../utils/regex";
 
-import { backendAxiosInstance } from "../../api/backend-service/backend-axios-instance";
-import { AuthEndPoints } from "../../api/backend-service/endpoints";
+import { backendAxiosInstance } from "../../api/backend/auth/backend-axios-instance";
+import { AuthEndPoints } from "../../api/backend/auth/endpoints";
 
 import { Props as InputProps } from "../../components/inputs/text";
 import { useForm } from "../../hooks/use-form";
+import ErrorAlert from "../../components/errors/error-alert";
+import { CustomErrorMessage, SafeUser } from "../../api/backend/auth/types";
 
-const SignupForm: React.FC = () => {
+const SignupPage: React.FC = () => {
   const [firstNameState, setFirstName, firstNameStatics] = useInput<InputProps>({
-    stateProps: { isValid: false, showError: false, value: "" },
+    stateProps: { isValid: true, showError: false, value: "" },
     staticsProps: {
       required: false,
       errorMsg: "First name should be with 2 - 40 characters ",
@@ -29,7 +31,7 @@ const SignupForm: React.FC = () => {
   });
 
   const [lastNameState, setLastName, lastNameStatics] = useInput<InputProps>({
-    stateProps: { isValid: false, showError: false, value: "" },
+    stateProps: { isValid: true, showError: false, value: "" },
     staticsProps: {
       required: false,
       errorMsg: "Last name should be with 2 - 40 characters ",
@@ -83,18 +85,16 @@ const SignupForm: React.FC = () => {
       },
     },
   });
-  useEffect(() => {
-    console.log("hello");
-  }, [firstNameStatics]);
-  const { data, error, fetchData, loading } = useRequest({
+
+  const { data, error, fetchData, loading } = useRequest<SafeUser, CustomErrorMessage>({
     config: {
       method: "post",
       url: AuthEndPoints["SIGNUP"],
       data: {
-        firstName: firstNameState.value,
-        lastName: lastNameState.value,
+        firstName: firstNameState.value || null,
+        lastName: lastNameState.value || null,
+        phoneNumber: phoneNumberState.value || null,
         email: emailState.value,
-        phoneNumber: phoneNumberState.value,
         password: passwordState.value,
       },
     },
@@ -104,47 +104,51 @@ const SignupForm: React.FC = () => {
   const { isFormValid } = useForm({ inputs: [firstNameState, lastNameState, emailState, passwordState, phoneNumberState] });
 
   return (
-    <Container disableGutters>
-      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", gap: "48px" }}>
-        <Typography variant="h4" gutterBottom>
-          Sign Up
-        </Typography>
-        <Grid container spacing={2}>
-          {/* First Name */}
-          <Grid item xs={12} sm={6}>
-            <TextInput stateProps={firstNameState} staticsProps={firstNameStatics} />
-          </Grid>
+    <FormControl>
+      <Container disableGutters>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", gap: "48px" }}>
+          <Typography variant="h4" gutterBottom>
+            Sign Up
+          </Typography>
+          <Grid container spacing={2}>
+            {/* First Name */}
+            <Grid item xs={12} sm={6}>
+              <TextInput stateProps={firstNameState} staticsProps={firstNameStatics} />
+            </Grid>
 
-          {/* Last Name */}
-          <Grid item xs={12} sm={6}>
-            <TextInput stateProps={lastNameState} staticsProps={lastNameStatics} />
-          </Grid>
+            {/* Last Name */}
+            <Grid item xs={12} sm={6}>
+              <TextInput stateProps={lastNameState} staticsProps={lastNameStatics} />
+            </Grid>
 
-          {/* Phone Number */}
-          <Grid item xs={12}>
-            <PhoneInput stateProps={phoneNumberState} staticsProps={phoneNumberStatics} />
-          </Grid>
+            {/* Phone Number */}
+            <Grid item xs={12}>
+              <PhoneInput stateProps={phoneNumberState} staticsProps={phoneNumberStatics} />
+            </Grid>
 
-          {/* Email */}
-          <Grid item xs={12}>
-            <TextInput stateProps={emailState} staticsProps={emailStatics} />
-          </Grid>
+            {/* Email */}
+            <Grid item xs={12}>
+              <TextInput stateProps={emailState} staticsProps={emailStatics} />
+            </Grid>
 
-          {/* Password */}
-          <Grid item xs={12}>
-            <PasswordInput stateProps={passwordState} staticsProps={passwordStatics} />
-          </Grid>
+            {/* Password */}
+            <Grid item xs={12}>
+              <PasswordInput stateProps={passwordState} staticsProps={passwordStatics} />
+            </Grid>
 
-          {/* Submit Button */}
-          <Grid item xs={12}>
-            <Button fullWidth variant="contained" color="primary" type="submit" sx={{ marginTop: 2 }} onClick={fetchData} disabled={!isFormValid}>
-              {loading ? "Loading..." : "Sign Up"}
-            </Button>
+            {/* Submit Button */}
+            <Grid item xs={12}>
+              <ErrorAlert errors={error} />
+
+              <Button fullWidth variant="contained" color="primary" type="submit" sx={{ marginTop: 2 }} onClick={fetchData} disabled={!isFormValid}>
+                {loading ? "Loading..." : "Sign Up"}
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
-      </Box>
-    </Container>
+        </Box>
+      </Container>
+    </FormControl>
   );
 };
 
-export default SignupForm;
+export default SignupPage;
