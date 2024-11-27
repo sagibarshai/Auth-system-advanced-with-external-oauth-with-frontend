@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Button, Typography, Box, Grid } from "@mui/material";
 
 import PhoneInput, { Props as PhoneInputProps } from "../../components/inputs/phone";
@@ -83,7 +83,9 @@ const SignupForm: React.FC = () => {
       },
     },
   });
-
+  useEffect(() => {
+    console.log("hello");
+  }, [firstNameStatics]);
   const { data, error, fetchData, loading } = useRequest({
     config: {
       method: "post",
