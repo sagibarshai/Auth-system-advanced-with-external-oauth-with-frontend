@@ -27,12 +27,12 @@ export const signInController = async (req: SignUpRequest, res: Response, next: 
         ])
       );
 
+    // password shouldn't be null here because this route handle only regular email and password register
     const isPasswordsMatch = compereHash(storedUser.password, req.body.password);
 
     if (!isPasswordsMatch) return next(BadRequestError([{ message: "Wrong Credentials" }]));
 
     if (!storedUser.isVerified) return next(ForbiddenError([{ message: "Email not verify, please check user email" }]));
-    // password shouldn't be null here because this route handle only regular email and password register
 
     const safeUser = await UpdateLoginModel(req.body.email);
 

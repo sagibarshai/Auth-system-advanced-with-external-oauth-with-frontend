@@ -1,14 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Button, Typography, Box, Grid, FormControl } from "@mui/material";
 
-import PhoneInput, { Props as PhoneInputProps } from "../../components/inputs/phone";
 import TextInput from "../../components/inputs/text";
 import PasswordInput from "../../components/inputs/password";
 
 import { useInput } from "../../hooks/use-input";
 import { useRequest } from "../../hooks/use-request";
 
-import { emailRegex, onlyNumbersRegex, phoneRegex, strongPasswordRegex } from "../../utils/regex";
+import { emailRegex, strongPasswordRegex } from "../../utils/regex";
 
 import { backendAxiosInstance } from "../../api/backend/auth/backend-axios-instance";
 import { AuthEndPoints } from "../../api/backend/auth/endpoints";
@@ -17,11 +16,23 @@ import { Props as InputProps } from "../../components/inputs/text";
 import { useForm } from "../../hooks/use-form";
 import ErrorAlert from "../../components/errors/error-alert";
 import { CustomErrorMessage, SafeUser } from "../../api/backend/auth/types";
+import Spinner from "../../components/spinners";
+import GoogleOAuthButton from "./google";
+import AppButton from "../../components/buttons";
+import useQueryParams from "../../hooks/use-query-params";
+import { useNavigate } from "react-router-dom";
 
 const SignInPage: React.FC = () => {
+  const [googleError, setGoogleError] = useState<CustomErrorMessage | null>(null);
+
+  const navigate = useNavigate();
+
+  const { getParam } = useQueryParams();
+
   const [emailState, setEmail, emailStatics] = useInput<InputProps>({
     stateProps: { isValid: false, showError: false, value: "" },
     staticsProps: {
+      type: "email",
       required: true,
       errorMsg: "Email should be in a valid structure",
       label: "Email",
@@ -59,16 +70,26 @@ const SignInPage: React.FC = () => {
 
   const { isFormValid } = useForm({ inputs: [emailState, passwordState] });
 
+  useEffect(() => {
+    setGoogleError(null);
+    const errors = getParam<CustomErrorMessage>("errors");
+    if (errors) setGoogleError(errors);
+  }, []);
+
+  const handleNavigateSignUp = () => {
+    navigate("/auth/signup");
+  };
+
   return (
     <FormControl>
       <Container disableGutters>
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", gap: "48px" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", gap: "12px" }}>
           <Typography variant="h4" gutterBottom>
             Sign In
           </Typography>
-          <Grid container spacing={2}>
-            {/* First Name */}
+          <AppButton variant="text" onClick={handleNavigateSignUp} text={`Don't Have Account yet? Sign Up Here`} disabled={false} />
 
+          <Grid container spacing={2}>
             {/* Email */}
             <Grid item xs={12}>
               <TextInput stateProps={emailState} staticsProps={emailStatics} />
@@ -81,13 +102,12 @@ const SignInPage: React.FC = () => {
 
             {/* Submit Button */}
             <Grid item xs={12}>
-              <ErrorAlert errors={error} />
+              <ErrorAlert errors={googleError || error} />
 
-              <Button fullWidth variant="contained" color="primary" type="submit" sx={{ marginTop: 2 }} onClick={fetchData} disabled={!isFormValid}>
-                {loading ? "Loading..." : "Sign Up"}
-              </Button>
+              <AppButton onClick={fetchData} disabled={!isFormValid} text={loading ? <Spinner loading={loading} /> : "Sign In"} />
             </Grid>
           </Grid>
+          <GoogleOAuthButton />
         </Box>
       </Container>
     </FormControl>

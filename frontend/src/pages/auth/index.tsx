@@ -6,7 +6,7 @@ import { Outlet } from "react-router-dom";
 const AuthPages = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    navigate("/auth/signup");
+    // navigate("/auth/signup");
   }, []);
 
   return (
@@ -18,14 +18,7 @@ const AuthPages = () => {
         flexDirection: "column",
       }}
     >
-      <Box sx={{ display: "flex", gap: "24px" }}>
-        <Grid>
-          <NavLink to={"/auth/signup"}>Signup</NavLink>
-        </Grid>
-        <Grid>
-          <NavLink to={"/auth/signin"}>Signin</NavLink>
-        </Grid>
-      </Box>
+      <Box sx={{ display: "flex", gap: "24px" }}></Box>
       <Box
         sx={{
           display: "flex",

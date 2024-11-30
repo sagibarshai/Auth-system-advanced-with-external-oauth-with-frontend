@@ -32,7 +32,7 @@ const App = () => {
 
       navigate("/home");
     } catch (err) {
-      navigate("/auth");
+      // navigate("/auth");
     }
   };
 

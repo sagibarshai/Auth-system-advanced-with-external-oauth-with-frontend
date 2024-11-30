@@ -4,6 +4,7 @@ export interface Props {
     label: string;
     onChange: (value: string) => void;
     errorMsg: string;
+    type?: React.HTMLInputTypeAttribute;
   };
   stateProps: {
     value: string;

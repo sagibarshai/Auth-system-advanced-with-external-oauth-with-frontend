@@ -17,8 +17,14 @@ import { Props as InputProps } from "../../components/inputs/text";
 import { useForm } from "../../hooks/use-form";
 import ErrorAlert from "../../components/errors/error-alert";
 import { CustomErrorMessage, SafeUser } from "../../api/backend/auth/types";
+import Spinner from "../../components/spinners";
+import GoogleOAuthButton from "./google";
+import AppButton from "../../components/buttons";
+import { useNavigate } from "react-router-dom";
 
 const SignupPage: React.FC = () => {
+  const navigate = useNavigate();
+
   const [firstNameState, setFirstName, firstNameStatics] = useInput<InputProps>({
     stateProps: { isValid: true, showError: false, value: "" },
     staticsProps: {
@@ -44,6 +50,7 @@ const SignupPage: React.FC = () => {
   const [emailState, setEmail, emailStatics] = useInput<InputProps>({
     stateProps: { isValid: false, showError: false, value: "" },
     staticsProps: {
+      type: "email",
       required: true,
       errorMsg: "Email should be in a valid structure",
       label: "Email",
@@ -103,13 +110,19 @@ const SignupPage: React.FC = () => {
 
   const { isFormValid } = useForm({ inputs: [firstNameState, lastNameState, emailState, passwordState, phoneNumberState] });
 
+  const handleNavigateSignIn = () => {
+    navigate("/auth/signin");
+  };
+
   return (
     <FormControl>
       <Container disableGutters>
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", gap: "48px" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", gap: "12px" }}>
           <Typography variant="h4" gutterBottom>
             Sign Up
           </Typography>
+          <AppButton variant="text" onClick={handleNavigateSignIn} text={`Already Have an Account? Sign In Here`} disabled={false} />
+
           <Grid container spacing={2}>
             {/* First Name */}
             <Grid item xs={12} sm={6}>
@@ -140,11 +153,10 @@ const SignupPage: React.FC = () => {
             <Grid item xs={12}>
               <ErrorAlert errors={error} />
 
-              <Button fullWidth variant="contained" color="primary" type="submit" sx={{ marginTop: 2 }} onClick={fetchData} disabled={!isFormValid}>
-                {loading ? "Loading..." : "Sign Up"}
-              </Button>
+              <AppButton onClick={fetchData} disabled={!isFormValid} text={loading ? <Spinner loading={loading} /> : "Sign Up"} />
             </Grid>
           </Grid>
+          <GoogleOAuthButton />
         </Box>
       </Container>
     </FormControl>
