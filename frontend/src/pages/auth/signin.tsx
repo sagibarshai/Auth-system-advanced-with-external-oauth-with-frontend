@@ -17,14 +17,12 @@ import { useForm } from "../../hooks/use-form";
 import ErrorAlert from "../../components/errors/error-alert";
 import { CustomErrorMessage, SafeUser } from "../../api/backend/auth/types";
 import Spinner from "../../components/spinners";
-import GoogleOAuthButton from "./google";
+import GoogleIcon from "@mui/icons-material/Google";
 import AppButton from "../../components/buttons";
 import useQueryParams from "../../hooks/use-query-params";
 import { useNavigate } from "react-router-dom";
 
 const SignInPage: React.FC = () => {
-  const [googleError, setGoogleError] = useState<CustomErrorMessage | null>(null);
-
   const navigate = useNavigate();
 
   const { getParam } = useQueryParams();
@@ -56,7 +54,7 @@ const SignInPage: React.FC = () => {
     },
   });
 
-  const { data, error, fetchData, loading } = useRequest<SafeUser, CustomErrorMessage>({
+  const { data, error, fetchData, loading, setErrorManfully } = useRequest<SafeUser, CustomErrorMessage | null>({
     config: {
       method: "post",
       url: AuthEndPoints["SIGNIN"],
@@ -71,13 +69,17 @@ const SignInPage: React.FC = () => {
   const { isFormValid } = useForm({ inputs: [emailState, passwordState] });
 
   useEffect(() => {
-    setGoogleError(null);
+    setErrorManfully(null);
     const errors = getParam<CustomErrorMessage>("errors");
-    if (errors) setGoogleError(errors);
+    if (errors) setErrorManfully(errors);
   }, []);
 
   const handleNavigateSignUp = () => {
     navigate("/auth/signup");
+  };
+
+  const handleGoogleNavigation = () => {
+    navigate("/auth/google");
   };
 
   return (
@@ -102,12 +104,20 @@ const SignInPage: React.FC = () => {
 
             {/* Submit Button */}
             <Grid item xs={12}>
-              <ErrorAlert errors={googleError || error} />
+              <ErrorAlert errors={error} />
 
               <AppButton onClick={fetchData} disabled={!isFormValid} text={loading ? <Spinner loading={loading} /> : "Sign In"} />
             </Grid>
           </Grid>
-          <GoogleOAuthButton />
+          <AppButton
+            variant="text"
+            onClick={handleGoogleNavigation}
+            text={
+              <Box sx={{ display: "flex", gap: "12px" }}>
+                <GoogleIcon /> Continue With Google
+              </Box>
+            }
+          />
         </Box>
       </Container>
     </FormControl>

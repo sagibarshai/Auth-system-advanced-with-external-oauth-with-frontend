@@ -91,6 +91,7 @@ export const config = {
   },
   EMAIL_VERIFICATION: {
     MAX_ATTEMPT: 3,
+    VERIFICATION_URL: "http://localhost:5173/auth/email-verification", // change this to the url of the verification email route that you define (backend or frontend)
   },
   GOOGLE_OAUTH: {
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,

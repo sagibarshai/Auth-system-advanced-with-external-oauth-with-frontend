@@ -5,6 +5,8 @@ import PhoneInput, { Props as PhoneInputProps } from "../../components/inputs/ph
 import TextInput from "../../components/inputs/text";
 import PasswordInput from "../../components/inputs/password";
 
+import GoogleIcon from "@mui/icons-material/Google";
+
 import { useInput } from "../../hooks/use-input";
 import { useRequest } from "../../hooks/use-request";
 
@@ -18,9 +20,9 @@ import { useForm } from "../../hooks/use-form";
 import ErrorAlert from "../../components/errors/error-alert";
 import { CustomErrorMessage, SafeUser } from "../../api/backend/auth/types";
 import Spinner from "../../components/spinners";
-import GoogleOAuthButton from "./google";
 import AppButton from "../../components/buttons";
 import { useNavigate } from "react-router-dom";
+import Info from "../../components/info";
 
 const SignupPage: React.FC = () => {
   const navigate = useNavigate();
@@ -114,6 +116,19 @@ const SignupPage: React.FC = () => {
     navigate("/auth/signin");
   };
 
+  const handleGoogleNavigation = () => {
+    navigate("/auth/google");
+  };
+
+  const handleResendEmailVerification = useRequest<any, CustomErrorMessage>({
+    axiosInstance: backendAxiosInstance,
+    config: {
+      url: AuthEndPoints.RESEND_EMAIL_VERIFICATION,
+      method: "post",
+      data: { email: emailState.value },
+    },
+  });
+
   return (
     <FormControl>
       <Container disableGutters>
@@ -122,7 +137,6 @@ const SignupPage: React.FC = () => {
             Sign Up
           </Typography>
           <AppButton variant="text" onClick={handleNavigateSignIn} text={`Already Have an Account? Sign In Here`} disabled={false} />
-
           <Grid container spacing={2}>
             {/* First Name */}
             <Grid item xs={12} sm={6}>
@@ -152,11 +166,26 @@ const SignupPage: React.FC = () => {
             {/* Submit Button */}
             <Grid item xs={12}>
               <ErrorAlert errors={error} />
+              <ErrorAlert errors={handleResendEmailVerification.error} />
+              {data ? (
+                <Box>
+                  <Info info={"Please check your inbox and click the verification link to confirm your email address"} />
+                  <AppButton onClick={handleResendEmailVerification.fetchData} text={"Resend Email"} />
+                </Box>
+              ) : null}
 
               <AppButton onClick={fetchData} disabled={!isFormValid} text={loading ? <Spinner loading={loading} /> : "Sign Up"} />
             </Grid>
           </Grid>
-          <GoogleOAuthButton />
+          <AppButton
+            variant="text"
+            onClick={handleGoogleNavigation}
+            text={
+              <Box sx={{ display: "flex", gap: "12px" }}>
+                <GoogleIcon /> Continue With Google
+              </Box>
+            }
+          />
         </Box>
       </Container>
     </FormControl>

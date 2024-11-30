@@ -1,15 +1,12 @@
-import React from "react";
-import { Button } from "@mui/material";
-import GoogleIcon from "@mui/icons-material/Google";
+import React, { useEffect } from "react";
 import { config } from "../../config";
 
-const GoogleOAuthButton: React.FC = () => {
+const AuthGooglePage: React.FC = () => {
   const openGoogleModal = () => (window.location.href = `${config.BACKEND.BASE_URL}/auth/google`);
-  return (
-    <Button sx={{ width: "100%", textDecoration: "underline" }} variant="text" startIcon={<GoogleIcon />} onClick={openGoogleModal}>
-      Continue With Google
-    </Button>
-  );
+  useEffect(() => {
+    openGoogleModal();
+  }, []);
+  return null;
 };
 
-export default GoogleOAuthButton;
+export default AuthGooglePage;

@@ -6,6 +6,7 @@ interface UseRequestReturn<T, R> {
   data: T | null;
   error: R | null;
   fetchData: () => Promise<void>;
+  setErrorManfully: (err: R) => void;
 }
 
 interface Props {
@@ -36,5 +37,7 @@ export const useRequest = <T, R = unknown>({ config, axiosInstance = axios }: Pr
 
   const fetchData = useCallback(makeRequest, [config, axiosInstance]);
 
-  return { fetchData, loading, data, error };
+  const setErrorManfully = (err: R) => setError(err);
+
+  return { fetchData, loading, data, error, setErrorManfully };
 };

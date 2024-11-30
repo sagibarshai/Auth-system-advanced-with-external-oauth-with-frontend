@@ -21,7 +21,7 @@ export const sendEmailVerification = async ({
     from: config.MAIL.FROM,
     to: to,
     subject: subject,
-    html: ` <a href=${config.BASE_URL}:${config.PORT}/api/auth/emailVerification/${id}/${encodeURIComponent(token)}>
+    html: ` <a href=${config.EMAIL_VERIFICATION.VERIFICATION_URL}/${id}/${encodeURIComponent(token)}>
     ${text}
     </a> `,
   };

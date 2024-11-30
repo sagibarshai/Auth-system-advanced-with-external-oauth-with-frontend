@@ -5,6 +5,8 @@ import AuthPages from "./pages/auth/index.tsx";
 import SignInPage from "./pages/auth/signin.tsx";
 import SignupPage from "./pages/auth/signup.tsx";
 import HomePage from "./pages/home/index.tsx";
+import EmailVerification from "./pages/auth/email-verification.tsx";
+import AuthGooglePage from "./pages/auth/google.tsx";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +24,14 @@ const router = createBrowserRouter([
           {
             path: "/auth/signup",
             element: <SignupPage />,
+          },
+          {
+            path: "/auth/email-verification/:id/:token",
+            element: <EmailVerification />,
+          },
+          {
+            path: "/auth/google",
+            element: <AuthGooglePage />,
           },
         ],
       },
