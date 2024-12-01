@@ -28,8 +28,10 @@ export const useRequest = <T, R = unknown>({ config, axiosInstance = axios }: Pr
       const result = await axiosInstance.request(config);
       setData(result.data);
     } catch (err: AxiosError | unknown) {
-      if (err instanceof AxiosError) setError(err.response?.data);
-      else setError(err as R);
+      if (err instanceof AxiosError) {
+        if (err.response?.status && err.response.status < 400) setData(err.response?.data);
+        else setError(err.response?.data);
+      } else setError(err as R);
     } finally {
       setLoading(false);
     }

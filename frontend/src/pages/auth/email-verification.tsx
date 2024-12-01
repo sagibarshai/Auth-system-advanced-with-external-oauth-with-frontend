@@ -7,6 +7,7 @@ import { useRequest } from "../../hooks/use-request";
 import useQueryParams from "../../hooks/use-query-params";
 import { AuthEndPoints } from "../../api/backend/auth/endpoints";
 import useRouteParams from "../../hooks/use-route-params";
+import { CustomErrorMessage } from "../../api/backend/auth/types";
 
 const EmailVerification: React.FC = () => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const EmailVerification: React.FC = () => {
     // navigate("/auth/signin");
   }
 
-  const { data, error, fetchData, loading } = useRequest({
+  const { data, error, fetchData, loading } = useRequest<string, CustomErrorMessage>({
     axiosInstance: backendAxiosInstance,
     config: {
       url: `${AuthEndPoints.EMAIL_VERIFICATION}/${id}/${token}`,
@@ -31,6 +32,14 @@ const EmailVerification: React.FC = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+      const info = encodeURIComponent(data);
+      navigate(`/auth/signin?info=${info}`);
+    }
+  }, [data]);
 
   return <div>{loading ? "Verifying Email....." : data ? JSON.stringify(data) : error ? JSON.stringify(error) : "Nothing"}</div>;
 };

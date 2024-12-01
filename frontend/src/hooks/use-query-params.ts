@@ -6,7 +6,12 @@ const useQueryParams = () => {
 
   const getParam = <T>(key: string): T | undefined => {
     const value = queryParams.get(key);
-    return value !== null ? (JSON.parse(value) as T) : undefined;
+    if (value === null) return undefined;
+    try {
+      return JSON.parse(decodeURIComponent(value)) as T;
+    } catch {
+      return value as T;
+    }
   };
 
   return { getParam };

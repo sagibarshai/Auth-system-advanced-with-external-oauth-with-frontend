@@ -21,11 +21,18 @@ import GoogleIcon from "@mui/icons-material/Google";
 import AppButton from "../../components/buttons";
 import useQueryParams from "../../hooks/use-query-params";
 import { useNavigate } from "react-router-dom";
+import Info from "../../components/info";
 
 const SignInPage: React.FC = () => {
   const navigate = useNavigate();
+  const [info, setInfo] = useState<string>("");
 
   const { getParam } = useQueryParams();
+
+  useEffect(() => {
+    const accountVerificationInfo = getParam<string>("info");
+    if (accountVerificationInfo) setInfo(accountVerificationInfo);
+  }, []);
 
   const [emailState, setEmail, emailStatics] = useInput<InputProps>({
     stateProps: { isValid: false, showError: false, value: "" },
@@ -104,8 +111,8 @@ const SignInPage: React.FC = () => {
 
             {/* Submit Button */}
             <Grid item xs={12}>
+              <Info info={info} />
               <ErrorAlert errors={error} />
-
               <AppButton onClick={fetchData} disabled={!isFormValid} text={loading ? <Spinner loading={loading} /> : "Sign In"} />
             </Grid>
           </Grid>
