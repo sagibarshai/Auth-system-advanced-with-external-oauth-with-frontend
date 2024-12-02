@@ -35,9 +35,7 @@ const EmailVerification: React.FC = () => {
 
   useEffect(() => {
     if (data) {
-      console.log(data);
-      const info = encodeURIComponent(data);
-      navigate(`/auth/signin?info=${info}`);
+      navigate(`/auth/signin`, { state: { data } });
     }
   }, [data]);
 

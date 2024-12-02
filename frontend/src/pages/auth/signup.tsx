@@ -129,8 +129,6 @@ const SignupPage: React.FC = () => {
     },
   });
 
-  console.log(handleResendEmailVerification.data);
-
   return (
     <FormControl>
       <Container disableGutters>
@@ -171,7 +169,7 @@ const SignupPage: React.FC = () => {
               <ErrorAlert errors={handleResendEmailVerification.error} />
               {data ? (
                 <Box>
-                  <Info info={"Please check your email inbox and click the verification link to confirm your email address"} />
+                  <Info info={handleResendEmailVerification.data ? handleResendEmailVerification.data : "Email verification sent to your email.."} />
                   <AppButton onClick={handleResendEmailVerification.fetchData} text={"Resend Email"} />
                 </Box>
               ) : null}

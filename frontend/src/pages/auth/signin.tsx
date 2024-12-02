@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Button, Typography, Box, Grid, FormControl } from "@mui/material";
+import { Container, Typography, Box, Grid, FormControl } from "@mui/material";
 
 import TextInput from "../../components/inputs/text";
 import PasswordInput from "../../components/inputs/password";
@@ -19,18 +19,16 @@ import { CustomErrorMessage, SafeUser } from "../../api/backend/auth/types";
 import Spinner from "../../components/spinners";
 import GoogleIcon from "@mui/icons-material/Google";
 import AppButton from "../../components/buttons";
-import useQueryParams from "../../hooks/use-query-params";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Info from "../../components/info";
 
 const SignInPage: React.FC = () => {
   const navigate = useNavigate();
   const [info, setInfo] = useState<string>("");
-
-  const { getParam } = useQueryParams();
+  const location = useLocation();
 
   useEffect(() => {
-    const accountVerificationInfo = getParam<string>("info");
+    const accountVerificationInfo = location.state?.data;
     if (accountVerificationInfo) setInfo(accountVerificationInfo);
   }, []);
 
@@ -77,7 +75,7 @@ const SignInPage: React.FC = () => {
 
   useEffect(() => {
     setErrorManfully(null);
-    const errors = getParam<CustomErrorMessage>("errors");
+    const errors = location.state?.errors;
     if (errors) setErrorManfully(errors);
   }, []);
 
