@@ -1,30 +1,24 @@
 import { Alert, AlertTitle, Container } from "@mui/material";
 
 interface Props {
-  info: string[] | string;
+  info: string[];
+  onClose?: (index: number | null) => void;
 }
 
-const Info: React.FC<Props> = ({ info }) => {
+const Info: React.FC<Props> = ({ info, onClose = () => {} }) => {
   if (!info) return null;
 
-  if (typeof info === "string")
-    return (
-      <Alert severity="info">
-        <AlertTitle>{info}</AlertTitle>
-      </Alert>
-    );
-  else
-    return (
-      <Container disableGutters sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-        {info.map((i) => {
-          return (
-            <Alert severity="info">
-              <AlertTitle>{i}</AlertTitle>
-            </Alert>
-          );
-        })}
-      </Container>
-    );
+  return (
+    <Container disableGutters sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+      {info.map((i, index) => {
+        return (
+          <Alert key={i + index} onClose={() => onClose(index)} severity="info">
+            <AlertTitle>{i}</AlertTitle>
+          </Alert>
+        );
+      })}
+    </Container>
+  );
 };
 
 export default Info;

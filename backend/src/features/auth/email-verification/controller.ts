@@ -45,7 +45,7 @@ export const resentEmailVerificationController = async (req: ResendEmailVerifica
 
     if (unsafeUser.isVerified) return next(BadRequestError([{ message: "User already verified" }]));
 
-    if (storedEmailVerification && storedEmailVerification.attempts >= config.EMAIL_VERIFICATION.MAX_ATTEMPT) {
+    if (storedEmailVerification && storedEmailVerification.attempts > config.EMAIL_VERIFICATION.MAX_ATTEMPT) {
       return next(BadRequestError([{ message: "User pass the maximum attempts of email verification ", field: "email" }]));
     }
 
@@ -53,13 +53,10 @@ export const resentEmailVerificationController = async (req: ResendEmailVerifica
 
     if (!emailVerification || !emailVerification.isSent) return next(InternalServerError([{ message: `Cannot send email to ${unsafeUser.email}` }]));
 
-    res
-      .status(200)
-      .send(
-        `Email verification sent successfully to ${unsafeUser.email}, Remain attempts : ${
-          config.EMAIL_VERIFICATION.MAX_ATTEMPT - storedEmailVerification!.attempts
-        }`
-      );
+    res.status(200).json({
+      message: `Email verification sent successfully to ${unsafeUser.email}`,
+      remainAttempts: config.EMAIL_VERIFICATION.MAX_ATTEMPT - storedEmailVerification!.attempts,
+    });
   } catch (err) {
     next(err);
   }

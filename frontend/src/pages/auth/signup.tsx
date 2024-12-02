@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Button, Typography, Box, Grid, FormControl } from "@mui/material";
 
 import PhoneInput, { Props as PhoneInputProps } from "../../components/inputs/phone";
@@ -19,13 +19,14 @@ import { Props as InputProps } from "../../components/inputs/text";
 import { useForm } from "../../hooks/use-form";
 import ErrorAlert from "../../components/errors/error-alert";
 import { CustomErrorMessage, SafeUser } from "../../api/backend/auth/types";
-import Spinner from "../../components/spinners";
 import AppButton from "../../components/buttons";
 import { useNavigate } from "react-router-dom";
 import Info from "../../components/info";
 
 const SignupPage: React.FC = () => {
   const navigate = useNavigate();
+  const [info, setInfo] = useState<string[] | null>(null);
+  const [errors, setErrors] = useState<CustomErrorMessage | null>(null);
 
   const [firstNameState, setFirstName, firstNameStatics] = useInput<InputProps>({
     stateProps: { isValid: true, showError: false, value: "" },
@@ -95,7 +96,8 @@ const SignupPage: React.FC = () => {
     },
   });
 
-  const { data, error, fetchData, loading } = useRequest<SafeUser, CustomErrorMessage>({
+  const singUpRequest = useRequest<SafeUser, CustomErrorMessage>({
+    axiosInstance: backendAxiosInstance,
     config: {
       method: "post",
       url: AuthEndPoints["SIGNUP"],
@@ -107,7 +109,15 @@ const SignupPage: React.FC = () => {
         password: passwordState.value,
       },
     },
+  });
+
+  const resendEmailVerificationRequest = useRequest<{ message: string; remainAttempts: number }, CustomErrorMessage>({
     axiosInstance: backendAxiosInstance,
+    config: {
+      url: AuthEndPoints.RESEND_EMAIL_VERIFICATION,
+      method: "post",
+      data: { email: singUpRequest.data?.email },
+    },
   });
 
   const { isFormValid } = useForm({ inputs: [firstNameState, lastNameState, emailState, passwordState, phoneNumberState] });
@@ -120,14 +130,28 @@ const SignupPage: React.FC = () => {
     navigate("/auth/google");
   };
 
-  const handleResendEmailVerification = useRequest<any, CustomErrorMessage>({
-    axiosInstance: backendAxiosInstance,
-    config: {
-      url: AuthEndPoints.RESEND_EMAIL_VERIFICATION,
-      method: "post",
-      data: { email: emailState.value },
-    },
-  });
+  useEffect(() => {
+    let updatedInfo: string[] = [];
+    if (resendEmailVerificationRequest.data) {
+      if (resendEmailVerificationRequest.data.remainAttempts > 0) {
+        updatedInfo = [`${resendEmailVerificationRequest.data.message} (${resendEmailVerificationRequest.data.remainAttempts} Attempts Remain)`];
+      } else {
+        let updatedErrors: CustomErrorMessage = errors || [];
+        setErrors([...updatedErrors, { field: "email", message: `${resendEmailVerificationRequest.data.message} No Attempts Remain)` }]);
+      }
+    }
+
+    if (singUpRequest.data) updatedInfo = [...updatedInfo, `We just sent email verification to your email address ${singUpRequest.data.email},`];
+
+    setInfo(updatedInfo);
+  }, [resendEmailVerificationRequest.data, singUpRequest.data]);
+
+  useEffect(() => {
+    let updatedErrors: CustomErrorMessage = [];
+    if (resendEmailVerificationRequest.error) updatedErrors = [...updatedErrors, ...resendEmailVerificationRequest.error];
+    if (singUpRequest.error) updatedErrors = [...updatedErrors, ...singUpRequest.error];
+    setErrors(updatedErrors);
+  }, [resendEmailVerificationRequest.error, singUpRequest.error]);
 
   return (
     <FormControl>
@@ -165,16 +189,31 @@ const SignupPage: React.FC = () => {
 
             {/* Submit Button */}
             <Grid item xs={12}>
-              <ErrorAlert errors={error} />
-              <ErrorAlert errors={handleResendEmailVerification.error} />
-              {data ? (
-                <Box>
-                  <Info info={handleResendEmailVerification.data ? handleResendEmailVerification.data : "Email verification sent to your email.."} />
-                  <AppButton onClick={handleResendEmailVerification.fetchData} text={"Resend Email"} />
-                </Box>
+              {info ? (
+                <Info
+                  info={info}
+                  onClose={(index: number | null) => {
+                    setInfo(info.filter((_, idx) => idx !== index));
+                  }}
+                />
               ) : null}
-
-              <AppButton onClick={fetchData} disabled={!isFormValid} text={loading ? <Spinner loading={loading} /> : "Sign Up"} />
+            </Grid>
+            <Grid item xs={12}>
+              <ErrorAlert errors={errors} />
+            </Grid>
+            <Grid item xs={12}>
+              {singUpRequest.data ? (
+                <Box>
+                  <AppButton
+                    onClick={resendEmailVerificationRequest.fetchData}
+                    text={`Resend Email Verification`}
+                    loading={resendEmailVerificationRequest.loading}
+                    disabled={Boolean(resendEmailVerificationRequest.data?.remainAttempts === 0)}
+                  />
+                </Box>
+              ) : (
+                <AppButton onClick={singUpRequest.fetchData} disabled={!isFormValid} text={"Sign Up"} loading={singUpRequest.loading} />
+              )}
             </Grid>
           </Grid>
           <AppButton
