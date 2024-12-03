@@ -18,7 +18,7 @@ import { AuthEndPoints } from "../../api/backend/auth/endpoints";
 import { Props as InputProps } from "../../components/inputs/text";
 import { useForm } from "../../hooks/use-form";
 import ErrorAlert from "../../components/errors";
-import { CustomErrorMessage, SafeUser } from "../../api/backend/auth/types";
+import { ApiResponseJson, CustomErrorMessage, SafeUser } from "../../api/backend/auth/types";
 import AppButton from "../../components/buttons";
 import { useNavigate } from "react-router-dom";
 import Info from "../../components/info";
@@ -96,7 +96,7 @@ const SignupPage: React.FC = () => {
     },
   });
 
-  const singUpRequest = useRequest<SafeUser, CustomErrorMessage>({
+  const singUpRequest = useRequest<ApiResponseJson<SafeUser>, CustomErrorMessage>({
     axiosInstance: backendAxiosInstance,
     config: {
       method: "post",
@@ -116,7 +116,7 @@ const SignupPage: React.FC = () => {
     config: {
       url: AuthEndPoints.RESEND_EMAIL_VERIFICATION,
       method: "post",
-      data: { email: singUpRequest.data?.email },
+      data: { email: singUpRequest.data?.data?.email },
     },
   });
 
@@ -141,7 +141,8 @@ const SignupPage: React.FC = () => {
       }
     }
 
-    if (singUpRequest.data) updatedInfo = [...updatedInfo, `We just sent email verification to your email address ${singUpRequest.data.email},`];
+    if (singUpRequest.data)
+      updatedInfo = [...updatedInfo, `We just sent email verification to your email address ${singUpRequest.data.data?.email},`];
 
     setInfo(updatedInfo);
   }, [resendEmailVerificationRequest.data, singUpRequest.data]);
@@ -205,7 +206,7 @@ const SignupPage: React.FC = () => {
               <ErrorAlert errors={errors} onClose={onCloseError} />
             </Grid>
             <Grid item xs={12}>
-              {singUpRequest.data ? (
+              {singUpRequest.data?.data ? (
                 <Box>
                   <AppButton
                     onClick={resendEmailVerificationRequest.fetchData}

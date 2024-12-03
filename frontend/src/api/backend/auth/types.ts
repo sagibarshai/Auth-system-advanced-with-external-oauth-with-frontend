@@ -16,7 +16,7 @@ export interface SafeUser {
   provider: "app" | "google";
 }
 
-export interface ApiResponseJson {
+export interface ApiResponseJson<T extends Record<string, any> = {}> {
   message?: string;
-  data?: Record<string, any>;
+  data?: T;
 }
