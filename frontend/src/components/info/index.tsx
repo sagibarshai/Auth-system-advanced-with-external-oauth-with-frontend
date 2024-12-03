@@ -2,7 +2,7 @@ import { Alert, AlertTitle, Container } from "@mui/material";
 
 interface Props {
   info: string[];
-  onClose?: (index: number | null) => void;
+  onClose?: (index: number) => void;
 }
 
 const Info: React.FC<Props> = ({ info, onClose = () => {} }) => {

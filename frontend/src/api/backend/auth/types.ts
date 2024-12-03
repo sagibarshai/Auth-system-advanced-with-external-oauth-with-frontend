@@ -15,3 +15,8 @@ export interface SafeUser {
   isVerified: boolean;
   provider: "app" | "google";
 }
+
+export interface ApiResponseJson {
+  message?: string;
+  data?: Record<string, any>;
+}

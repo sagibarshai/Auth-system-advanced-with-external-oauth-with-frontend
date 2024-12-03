@@ -3,5 +3,5 @@ import { deleteTokenCookie } from "../../../utils/jwt";
 
 export const signOutController = (req: Request, res: Response) => {
   deleteTokenCookie(req);
-  res.status(301).send();
+  res.status(301).json({});
 };

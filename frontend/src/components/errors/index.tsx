@@ -3,23 +3,24 @@ import { CustomErrorMessage } from "../../api/backend/auth/types";
 
 interface Props {
   errors: string[] | CustomErrorMessage | null;
+  onClose: (index: number) => void;
 }
 
-const ErrorAlert: React.FC<Props> = ({ errors }) => {
+const ErrorAlert: React.FC<Props> = ({ errors, onClose = () => {} }) => {
   if (!errors) return null;
 
   return (
     <Container disableGutters sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-      {errors.map((e) => {
+      {errors.map((e, i) => {
         if (typeof e === "string")
           return (
-            <Alert severity="error">
+            <Alert onClose={() => onClose(i)} severity="error">
               <AlertTitle>{e}</AlertTitle>
             </Alert>
           );
         else
           return (
-            <Alert severity="error">
+            <Alert onClose={() => onClose(i)} severity="error">
               <AlertTitle>
                 {e.field ? (
                   <>

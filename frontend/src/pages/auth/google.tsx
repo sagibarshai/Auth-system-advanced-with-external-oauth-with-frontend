@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 const AuthGooglePage: React.FC = () => {
   const { getParam } = useQueryParams();
   const navigate = useNavigate();
-
   const openGoogleModal = () => (window.location.href = `${config.BACKEND.BASE_URL}/auth/google`);
   useEffect(() => {
     const errors = getParam<CustomErrorMessage>("errors");

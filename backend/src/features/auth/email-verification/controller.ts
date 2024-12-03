@@ -5,6 +5,7 @@ import { BadRequestError, InternalServerError } from "../../../errors";
 import { sendEmailVerification } from "../../../utils/email-verification";
 import { SelectEmailVerificationModel } from "../models/email-verification";
 import { config } from "../../../config";
+import { ApiResponseJson } from "../../../types/api-response-json";
 
 interface EmailVerificationRequest extends Request {
   params: {
@@ -27,8 +28,9 @@ export const emailVerificationController = async (req: EmailVerificationRequest,
     if (token !== unsafeUser.verificationToken) return next(BadRequestError([{ message: "Invalid verification token" }]));
 
     await UpdateUserIsVerifyModel(Number(id));
+    const response: ApiResponseJson = { message: "Account is successfully verified" };
 
-    res.status(301).send("Account is successfully verified");
+    res.status(301).json(response);
   } catch (err) {
     next(err);
   }

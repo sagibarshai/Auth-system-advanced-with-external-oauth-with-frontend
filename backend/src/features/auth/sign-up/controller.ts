@@ -4,6 +4,7 @@ import { BadRequestError } from "../../../errors";
 import { toHash } from "../../../utils/hashes";
 import { deleteTokenCookie } from "../../../utils/jwt";
 import { sendEmailVerification } from "../../../utils/email-verification";
+import { ApiResponseJson } from "../../../types/api-response-json";
 
 interface SignUpRequest extends Request {
   body: NewUserPayload;
@@ -21,7 +22,9 @@ export const signUpController = async (req: SignUpRequest, res: Response, next: 
     const { safeUser, verificationToken } = await InsertUserModel({ ...req.body, password: hashedPassword });
 
     await sendEmailVerification({ id: safeUser.id, to: safeUser.email!, token: verificationToken! });
-    res.status(201).send(safeUser);
+    const response: ApiResponseJson = { data: safeUser };
+
+    res.status(201).json(response);
   } catch (err) {
     next(err);
   }

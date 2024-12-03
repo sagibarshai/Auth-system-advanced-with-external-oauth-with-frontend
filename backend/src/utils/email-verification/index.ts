@@ -14,8 +14,8 @@ export const sendEmailVerification = async ({
   id,
   to,
   token,
-  subject = "Account verification",
-  text = "Verify your account here:",
+  subject = "Account Verification",
+  text = "Verify Your Account Here",
 }: VerifyEmailProperties): Promise<ReturnedEmailVerification | undefined> => {
   const mailOptions = {
     from: config.MAIL.FROM,

@@ -12,7 +12,7 @@ interface Props {
 
 const AppButton: React.FC<Props> = ({ onClick, text, variant = "contained", disabled = false, loading = false }) => {
   return (
-    <Button fullWidth variant={variant} color="primary" type="submit" sx={{ marginTop: 2 }} onClick={onClick} disabled={disabled}>
+    <Button fullWidth variant={variant} color="primary" type="submit" sx={{ marginTop: 2 }} onClick={onClick} disabled={disabled || loading}>
       {loading ? <Spinner loading={loading} /> : text}
     </Button>
   );

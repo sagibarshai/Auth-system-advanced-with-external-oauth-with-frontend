@@ -4,6 +4,8 @@ import { Container, Typography, Box, Grid, FormControl } from "@mui/material";
 import TextInput from "../../components/inputs/text";
 import PasswordInput from "../../components/inputs/password";
 
+import GoogleIcon from "@mui/icons-material/Google";
+
 import { useInput } from "../../hooks/use-input";
 import { useRequest } from "../../hooks/use-request";
 
@@ -14,23 +16,17 @@ import { AuthEndPoints } from "../../api/backend/auth/endpoints";
 
 import { Props as InputProps } from "../../components/inputs/text";
 import { useForm } from "../../hooks/use-form";
-import ErrorAlert from "../../components/errors/error-alert";
+import ErrorAlert from "../../components/errors";
 import { CustomErrorMessage, SafeUser } from "../../api/backend/auth/types";
-import Spinner from "../../components/spinners";
-import GoogleIcon from "@mui/icons-material/Google";
 import AppButton from "../../components/buttons";
 import { useLocation, useNavigate } from "react-router-dom";
 import Info from "../../components/info";
 
 const SignInPage: React.FC = () => {
   const navigate = useNavigate();
-  const [info, setInfo] = useState<string>("");
-  const location = useLocation();
-
-  useEffect(() => {
-    const accountVerificationInfo = location.state?.data;
-    if (accountVerificationInfo) setInfo(accountVerificationInfo);
-  }, []);
+  const [info, setInfo] = useState<string[] | null>(null);
+  const [errors, setErrors] = useState<CustomErrorMessage | null>(null);
+  const location: { state: { errors: CustomErrorMessage; info: string[] } } = useLocation();
 
   const [emailState, setEmail, emailStatics] = useInput<InputProps>({
     stateProps: { isValid: false, showError: false, value: "" },
@@ -59,7 +55,8 @@ const SignInPage: React.FC = () => {
     },
   });
 
-  const { data, error, fetchData, loading, setErrorManfully } = useRequest<SafeUser, CustomErrorMessage | null>({
+  const singInRequest = useRequest<SafeUser, CustomErrorMessage>({
+    axiosInstance: backendAxiosInstance,
     config: {
       method: "post",
       url: AuthEndPoints["SIGNIN"],
@@ -68,23 +65,39 @@ const SignInPage: React.FC = () => {
         password: passwordState.value,
       },
     },
-    axiosInstance: backendAxiosInstance,
   });
 
   const { isFormValid } = useForm({ inputs: [emailState, passwordState] });
 
-  useEffect(() => {
-    setErrorManfully(null);
-    const errors = location.state?.errors;
-    if (errors) setErrorManfully(errors);
-  }, []);
-
   const handleNavigateSignUp = () => {
-    navigate("/auth/signup");
+    navigate("/auth/signUp");
   };
 
   const handleGoogleNavigation = () => {
     navigate("/auth/google");
+  };
+
+  useEffect(() => {
+    let updatedErrors: CustomErrorMessage = [];
+    if (location?.state?.errors) updatedErrors = [...location.state.errors];
+    if (singInRequest.error) updatedErrors = [...updatedErrors, ...singInRequest.error];
+    setErrors(updatedErrors);
+  }, [singInRequest.error]);
+
+  useEffect(() => {
+    let updatedInfo: string[] = [];
+    if (location?.state?.info) updatedInfo = [...location.state.info];
+    setInfo(updatedInfo);
+  }, []);
+
+  const onCloseError = (index: number) => {
+    if (!errors) return;
+    setErrors(errors?.filter((_, i) => i !== index));
+  };
+
+  const onCloseInfo = (index: number) => {
+    if (!info) return;
+    setInfo(info.filter((_, idx) => idx !== index));
   };
 
   return (
@@ -94,8 +107,7 @@ const SignInPage: React.FC = () => {
           <Typography variant="h4" gutterBottom>
             Sign In
           </Typography>
-          <AppButton variant="text" onClick={handleNavigateSignUp} text={`Don't Have Account yet? Sign Up Here`} disabled={false} />
-
+          <AppButton variant="text" onClick={handleNavigateSignUp} text={`Don't Have an Account? Sign Up Here`} disabled={false} />
           <Grid container spacing={2}>
             {/* Email */}
             <Grid item xs={12}>
@@ -109,9 +121,13 @@ const SignInPage: React.FC = () => {
 
             {/* Submit Button */}
             <Grid item xs={12}>
-              <Info info={info} />
-              <ErrorAlert errors={error} />
-              <AppButton onClick={fetchData} disabled={!isFormValid} text={loading ? <Spinner loading={loading} /> : "Sign In"} />
+              {info ? <Info info={info} onClose={onCloseInfo} /> : null}
+            </Grid>
+            <Grid item xs={12}>
+              {errors && <ErrorAlert onClose={onCloseError} errors={errors} />}
+            </Grid>
+            <Grid item xs={12}>
+              <AppButton onClick={singInRequest.fetchData} disabled={!isFormValid} text={"Sign In"} loading={singInRequest.loading} />
             </Grid>
           </Grid>
           <AppButton

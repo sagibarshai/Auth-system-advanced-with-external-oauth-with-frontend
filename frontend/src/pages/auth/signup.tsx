@@ -17,7 +17,7 @@ import { AuthEndPoints } from "../../api/backend/auth/endpoints";
 
 import { Props as InputProps } from "../../components/inputs/text";
 import { useForm } from "../../hooks/use-form";
-import ErrorAlert from "../../components/errors/error-alert";
+import ErrorAlert from "../../components/errors";
 import { CustomErrorMessage, SafeUser } from "../../api/backend/auth/types";
 import AppButton from "../../components/buttons";
 import { useNavigate } from "react-router-dom";
@@ -153,6 +153,16 @@ const SignupPage: React.FC = () => {
     setErrors(updatedErrors);
   }, [resendEmailVerificationRequest.error, singUpRequest.error]);
 
+  const onCloseError = (index: number) => {
+    if (!errors) return;
+    setErrors(errors?.filter((_, i) => i !== index));
+  };
+
+  const onCloseInfo = (index: number) => {
+    if (!info) return;
+    setInfo(info?.filter((_, i) => i !== index));
+  };
+
   return (
     <FormControl>
       <Container disableGutters>
@@ -189,17 +199,10 @@ const SignupPage: React.FC = () => {
 
             {/* Submit Button */}
             <Grid item xs={12}>
-              {info ? (
-                <Info
-                  info={info}
-                  onClose={(index: number | null) => {
-                    setInfo(info.filter((_, idx) => idx !== index));
-                  }}
-                />
-              ) : null}
+              {info ? <Info info={info} onClose={onCloseInfo} /> : null}
             </Grid>
             <Grid item xs={12}>
-              <ErrorAlert errors={errors} />
+              <ErrorAlert errors={errors} onClose={onCloseError} />
             </Grid>
             <Grid item xs={12}>
               {singUpRequest.data ? (

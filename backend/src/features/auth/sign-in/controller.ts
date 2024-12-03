@@ -3,6 +3,7 @@ import { SelectUnsafeUserModel, UpdateLoginModel } from "../models/auth";
 import { BadRequestError, ForbiddenError } from "../../../errors";
 import { compereHash } from "../../../utils/hashes";
 import { createTokenSetCookie, deleteTokenCookie } from "../../../utils/jwt";
+import { ApiResponseJson } from "../../../types/api-response-json";
 
 interface SignUpRequest extends Request {
   body: {
@@ -39,7 +40,9 @@ export const signInController = async (req: SignUpRequest, res: Response, next: 
     // attach token as cookie to client
     createTokenSetCookie(safeUser, req);
 
-    res.status(200).send(safeUser);
+    const response: ApiResponseJson = { data: safeUser };
+
+    res.status(200).json(response);
   } catch (err) {
     next(err);
   }
