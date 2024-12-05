@@ -55,7 +55,7 @@ const SignInPage: React.FC = () => {
     },
   });
 
-  const singInRequest = useRequest<SafeUser, CustomErrorMessage>({
+  const signInRequest = useRequest<SafeUser, CustomErrorMessage>({
     axiosInstance: backendAxiosInstance,
     config: {
       method: "post",
@@ -81,10 +81,15 @@ const SignInPage: React.FC = () => {
 
   useEffect(() => {
     let updatedErrors: CustomErrorMessage = [];
-    if (pageState.errors) updatedErrors = [...pageState.errors];
-    if (singInRequest.error) updatedErrors = [...updatedErrors, ...singInRequest.error];
+    if (signInRequest.error) updatedErrors = [...updatedErrors, ...signInRequest.error];
     setErrors(updatedErrors);
-  }, [singInRequest.error]);
+  }, [signInRequest.error]);
+
+  useEffect(() => {
+    if (pageState.errors) {
+      setErrors((prev) => (prev ? [...pageState.errors!, ...prev] : [...pageState.errors!]));
+    }
+  }, []);
 
   useEffect(() => {
     let updatedInfo: string[] = [];
@@ -129,7 +134,7 @@ const SignInPage: React.FC = () => {
               {errors && <ErrorAlert onClose={onCloseError} errors={errors} />}
             </Grid>
             <Grid item xs={12}>
-              <AppButton onClick={singInRequest.fetchData} disabled={!isFormValid} text={"Sign In"} loading={singInRequest.loading} />
+              <AppButton onClick={signInRequest.fetchData} disabled={!isFormValid} text={"Sign In"} loading={signInRequest.loading} />
             </Grid>
           </Grid>
           <AppButton

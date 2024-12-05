@@ -1,16 +1,10 @@
 import { useCallback } from "react";
 import { NavigateOptions, useLocation, useNavigate, useParams } from "react-router-dom";
 import { CustomErrorMessage } from "../../api/backend/auth/types";
+import { Pages } from "../../router";
 
 interface AppNavigateOptions extends NavigateOptions {
   state: PageState;
-}
-enum Pages {
-  SIGNIN = "/auth/signin",
-  SIGNUP = "/auth/signup",
-  GOOGLE_AUTH = "/auth/google",
-  EMAIL_VERIFICATION = "/auth/email-verification",
-  HOME = "/home",
 }
 
 interface PageState {

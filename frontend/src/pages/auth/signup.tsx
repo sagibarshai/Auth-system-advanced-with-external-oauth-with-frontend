@@ -101,7 +101,7 @@ const SignupPage: React.FC = () => {
     },
   });
 
-  const singUpRequest = useRequest<ApiResponseJson<SafeUser>, CustomErrorMessage>({
+  const signupRequest = useRequest<ApiResponseJson<SafeUser>, CustomErrorMessage>({
     axiosInstance: backendAxiosInstance,
     config: {
       method: "post",
@@ -121,13 +121,13 @@ const SignupPage: React.FC = () => {
     config: {
       url: AuthEndPoints.RESEND_EMAIL_VERIFICATION,
       method: "post",
-      data: { email: singUpRequest.data?.data?.email },
+      data: { email: signupRequest.data?.data?.email },
     },
   });
 
   useEffect(() => {
-    if (singUpRequest.data?.data) dispatch(setUser(singUpRequest.data.data));
-  }, [singUpRequest.data]);
+    if (signupRequest.data?.data) dispatch(setUser(signupRequest.data.data));
+  }, [signupRequest.data]);
 
   const { isFormValid } = useForm({ inputs: [firstNameState, lastNameState, emailState, passwordState, phoneNumberState] });
 
@@ -150,18 +150,18 @@ const SignupPage: React.FC = () => {
       }
     }
 
-    if (singUpRequest.data)
-      updatedInfo = [...updatedInfo, `We just sent email verification to your email address ${singUpRequest.data.data?.email},`];
+    if (signupRequest.data)
+      updatedInfo = [...updatedInfo, `We just sent email verification to your email address ${signupRequest.data.data?.email},`];
 
     setInfo(updatedInfo);
-  }, [resendEmailVerificationRequest.data, singUpRequest.data]);
+  }, [resendEmailVerificationRequest.data, signupRequest.data]);
 
   useEffect(() => {
     let updatedErrors: CustomErrorMessage = [];
     if (resendEmailVerificationRequest.error) updatedErrors = [...updatedErrors, ...resendEmailVerificationRequest.error];
-    if (singUpRequest.error) updatedErrors = [...updatedErrors, ...singUpRequest.error];
+    if (signupRequest.error) updatedErrors = [...updatedErrors, ...signupRequest.error];
     setErrors(updatedErrors);
-  }, [resendEmailVerificationRequest.error, singUpRequest.error]);
+  }, [resendEmailVerificationRequest.error, signupRequest.error]);
 
   const onCloseError = (index: number) => {
     if (!errors) return;
@@ -215,7 +215,7 @@ const SignupPage: React.FC = () => {
               <ErrorAlert errors={errors} onClose={onCloseError} />
             </Grid>
             <Grid item xs={12}>
-              {singUpRequest.data?.data ? (
+              {signupRequest.data?.data ? (
                 <Box>
                   <AppButton
                     text={`Resend Email Verification`}
@@ -225,7 +225,7 @@ const SignupPage: React.FC = () => {
                   />
                 </Box>
               ) : (
-                <AppButton onClick={singUpRequest.fetchData} disabled={!isFormValid} text={"Sign Up"} loading={singUpRequest.loading} />
+                <AppButton onClick={signupRequest.fetchData} disabled={!isFormValid} text={"Sign Up"} loading={signupRequest.loading} />
               )}
             </Grid>
           </Grid>
