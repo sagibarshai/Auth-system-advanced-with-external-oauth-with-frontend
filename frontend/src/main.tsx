@@ -7,6 +7,8 @@ import SignupPage from "./pages/auth/signup.tsx";
 import HomePage from "./pages/home/index.tsx";
 import EmailVerification from "./pages/auth/email-verification.tsx";
 import AuthGooglePage from "./pages/auth/google.tsx";
+import { Provider } from "react-redux";
+import { store } from "./redux/store.ts";
 
 const router = createBrowserRouter([
   {
@@ -45,6 +47,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </>
 );

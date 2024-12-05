@@ -22,8 +22,12 @@ import { ApiResponseJson, CustomErrorMessage, SafeUser } from "../../api/backend
 import AppButton from "../../components/buttons";
 import { useNavigate } from "react-router-dom";
 import Info from "../../components/info";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { setUser } from "../../redux/features/user";
 
 const SignupPage: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state);
   const navigate = useNavigate();
   const [info, setInfo] = useState<string[] | null>(null);
   const [errors, setErrors] = useState<CustomErrorMessage | null>(null);
@@ -76,6 +80,7 @@ const SignupPage: React.FC = () => {
         })),
     },
   });
+
   const [phoneNumberState, setPhoneNumber, phoneNumberStatics] = useInput<PhoneInputProps>({
     stateProps: { isValid: true, showError: false, value: "" },
     staticsProps: {
@@ -119,6 +124,10 @@ const SignupPage: React.FC = () => {
       data: { email: singUpRequest.data?.data?.email },
     },
   });
+
+  useEffect(() => {
+    if (singUpRequest.data?.data) dispatch(setUser(singUpRequest.data.data));
+  }, [singUpRequest.data]);
 
   const { isFormValid } = useForm({ inputs: [firstNameState, lastNameState, emailState, passwordState, phoneNumberState] });
 

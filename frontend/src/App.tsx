@@ -2,9 +2,11 @@ import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { createTheme, CssBaseline, Container, ThemeProvider } from "@mui/material";
+import { useAppSelector } from "./hooks/redux";
 
 const App = () => {
   const navigate = useNavigate();
+  const a = useAppSelector((state) => state.user);
 
   const theme = createTheme({
     components: {
