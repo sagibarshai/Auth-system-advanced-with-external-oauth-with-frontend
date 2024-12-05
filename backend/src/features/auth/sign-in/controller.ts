@@ -19,11 +19,11 @@ export const signInController = async (req: SignUpRequest, res: Response, next: 
     const storedUser = await SelectUnsafeUserModel(req.body.email);
     if (!storedUser) return next(BadRequestError([{ message: "Wrong Credentials" }]));
     if (!storedUser.password)
-      // password is null only when the user is signup with external provider
+      // password is null only when the user is signup with external provider e.g. google
       return next(
         BadRequestError([
           {
-            message: `User authenticated via ${storedUser.provider} cannot sign in with a password. Please use the appropriate ${storedUser.provider} login route.`,
+            message: `Wrong Credentials`,
           },
         ])
       );
