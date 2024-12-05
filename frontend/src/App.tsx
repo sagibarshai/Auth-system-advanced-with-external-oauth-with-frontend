@@ -1,12 +1,11 @@
 import { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import axios from "axios";
 import { createTheme, CssBaseline, Container, ThemeProvider } from "@mui/material";
-import { useAppSelector } from "./hooks/redux";
+import { useAppRouter } from "./hooks/router";
 
 const App = () => {
-  const navigate = useNavigate();
-  const a = useAppSelector((state) => state.user);
+  const { appNavigate } = useAppRouter();
 
   const theme = createTheme({
     components: {
@@ -31,11 +30,8 @@ const App = () => {
         withCredentials: true,
       });
       const user = response.data;
-
-      navigate("/home");
-    } catch (err) {
-      // navigate("/auth");
-    }
+      appNavigate("HOME");
+    } catch (err) {}
   };
 
   useEffect(() => {

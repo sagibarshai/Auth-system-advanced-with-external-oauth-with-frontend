@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Container, Typography, Box, Grid, FormControl } from "@mui/material";
 
 import TextInput from "../../components/inputs/text";
@@ -19,14 +19,14 @@ import { useForm } from "../../hooks/use-form";
 import ErrorAlert from "../../components/errors";
 import { CustomErrorMessage, SafeUser } from "../../api/backend/auth/types";
 import AppButton from "../../components/buttons";
-import { useLocation, useNavigate } from "react-router-dom";
+
 import Info from "../../components/info";
+import { useAppRouter } from "../../hooks/router";
 
 const SignInPage: React.FC = () => {
-  const navigate = useNavigate();
+  const { appNavigate, getPageState } = useAppRouter();
   const [info, setInfo] = useState<string[] | null>(null);
   const [errors, setErrors] = useState<CustomErrorMessage | null>(null);
-  const location: { state: { errors: CustomErrorMessage; info: string[] } } = useLocation();
 
   const [emailState, setEmail, emailStatics] = useInput<InputProps>({
     stateProps: { isValid: false, showError: false, value: "" },
@@ -70,23 +70,25 @@ const SignInPage: React.FC = () => {
   const { isFormValid } = useForm({ inputs: [emailState, passwordState] });
 
   const handleNavigateSignUp = () => {
-    navigate("/auth/signUp");
+    appNavigate("SIGNUP");
   };
 
   const handleGoogleNavigation = () => {
-    navigate("/auth/google");
+    appNavigate("GOOGLE_AUTH");
   };
+
+  const pageState = useMemo(() => getPageState(), []);
 
   useEffect(() => {
     let updatedErrors: CustomErrorMessage = [];
-    if (location?.state?.errors) updatedErrors = [...location.state.errors];
+    if (pageState.errors) updatedErrors = [...pageState.errors];
     if (singInRequest.error) updatedErrors = [...updatedErrors, ...singInRequest.error];
     setErrors(updatedErrors);
   }, [singInRequest.error]);
 
   useEffect(() => {
     let updatedInfo: string[] = [];
-    if (location?.state?.info) updatedInfo = [...location.state.info];
+    if (pageState.info) updatedInfo = [...pageState.info];
     setInfo(updatedInfo);
   }, []);
 

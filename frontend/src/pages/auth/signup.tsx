@@ -22,13 +22,13 @@ import { ApiResponseJson, CustomErrorMessage, SafeUser } from "../../api/backend
 import AppButton from "../../components/buttons";
 import { useNavigate } from "react-router-dom";
 import Info from "../../components/info";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { useAppDispatch } from "../../hooks/redux";
 import { setUser } from "../../redux/features/user";
+import { useAppRouter } from "../../hooks/router";
 
 const SignupPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector((state) => state);
-  const navigate = useNavigate();
+  const { appNavigate, getPageState } = useAppRouter();
   const [info, setInfo] = useState<string[] | null>(null);
   const [errors, setErrors] = useState<CustomErrorMessage | null>(null);
 
@@ -132,11 +132,11 @@ const SignupPage: React.FC = () => {
   const { isFormValid } = useForm({ inputs: [firstNameState, lastNameState, emailState, passwordState, phoneNumberState] });
 
   const handleNavigateSignIn = () => {
-    navigate("/auth/signin");
+    appNavigate("SIGNIN");
   };
 
   const handleGoogleNavigation = () => {
-    navigate("/auth/google");
+    appNavigate("GOOGLE_AUTH");
   };
 
   useEffect(() => {
@@ -218,8 +218,8 @@ const SignupPage: React.FC = () => {
               {singUpRequest.data?.data ? (
                 <Box>
                   <AppButton
-                    onClick={resendEmailVerificationRequest.fetchData}
                     text={`Resend Email Verification`}
+                    onClick={resendEmailVerificationRequest.fetchData}
                     loading={resendEmailVerificationRequest.loading}
                     disabled={Boolean(resendEmailVerificationRequest.data?.remainAttempts === 0)}
                   />

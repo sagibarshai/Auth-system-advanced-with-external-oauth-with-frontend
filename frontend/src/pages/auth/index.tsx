@@ -1,14 +1,8 @@
-import { Box, Container, Grid } from "@mui/material";
-import { useEffect } from "react";
-import { NavLink, useNavigate, useNavigation } from "react-router-dom";
+import { Box, Container } from "@mui/material";
+
 import { Outlet } from "react-router-dom";
 
 const AuthPages = () => {
-  const navigate = useNavigate();
-  useEffect(() => {
-    // navigate("/auth/signup");
-  }, []);
-
   return (
     <Container
       sx={{
