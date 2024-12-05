@@ -17,19 +17,21 @@ import { AuthEndPoints } from "../../api/backend/auth/endpoints";
 
 import { Props as InputProps } from "../../components/inputs/text";
 import { useForm } from "../../hooks/use-form";
-import ErrorAlert from "../../components/errors";
+import ErrorAlert from "../../components/alerts/errors";
 import { ApiResponseJson, CustomErrorMessage, SafeUser } from "../../api/backend/auth/types";
 import AppButton from "../../components/buttons";
-import { useNavigate } from "react-router-dom";
-import Info from "../../components/info";
+import Info from "../../components/alerts/info";
+import Success from "../../components/alerts/success";
 import { useAppDispatch } from "../../hooks/redux";
 import { setUser } from "../../redux/features/user";
 import { useAppRouter } from "../../hooks/router";
 
 const SignupPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { appNavigate, getPageState } = useAppRouter();
+  const { appNavigate } = useAppRouter();
   const [info, setInfo] = useState<string[] | null>(null);
+  const [success, setSuccess] = useState<string[] | null>(null);
+
   const [errors, setErrors] = useState<CustomErrorMessage | null>(null);
 
   const [firstNameState, setFirstName, firstNameStatics] = useInput<InputProps>({
@@ -139,6 +141,7 @@ const SignupPage: React.FC = () => {
     appNavigate("GOOGLE_AUTH");
   };
 
+  // set the info from email verification
   useEffect(() => {
     let updatedInfo: string[] = [];
     if (resendEmailVerificationRequest.data) {
@@ -150,18 +153,20 @@ const SignupPage: React.FC = () => {
       }
     }
 
-    if (signupRequest.data)
-      updatedInfo = [...updatedInfo, `We just sent email verification to your email address ${signupRequest.data.data?.email},`];
-
     setInfo(updatedInfo);
   }, [resendEmailVerificationRequest.data, signupRequest.data]);
 
+  // set the errors from google and email verification max attempt
   useEffect(() => {
     let updatedErrors: CustomErrorMessage = [];
-    if (resendEmailVerificationRequest.error) updatedErrors = [...updatedErrors, ...resendEmailVerificationRequest.error];
-    if (signupRequest.error) updatedErrors = [...updatedErrors, ...signupRequest.error];
+    if (resendEmailVerificationRequest.error) updatedErrors = [...updatedErrors, ...resendEmailVerificationRequest.error.customErrors];
+    if (signupRequest.error) updatedErrors = [...updatedErrors, ...signupRequest.error.customErrors];
     setErrors(updatedErrors);
   }, [resendEmailVerificationRequest.error, signupRequest.error]);
+
+  useEffect(() => {
+    if (signupRequest.data) setSuccess([`You sign up successfully, Check you email for email verification link`]);
+  }, [signupRequest.data]);
 
   const onCloseError = (index: number) => {
     if (!errors) return;
@@ -171,6 +176,11 @@ const SignupPage: React.FC = () => {
   const onCloseInfo = (index: number) => {
     if (!info) return;
     setInfo(info?.filter((_, i) => i !== index));
+  };
+
+  const onCloseSuccess = (index: number) => {
+    if (!success) return;
+    setSuccess(success?.filter((_, i) => i !== index));
   };
 
   return (
@@ -209,10 +219,13 @@ const SignupPage: React.FC = () => {
 
             {/* Submit Button */}
             <Grid item xs={12}>
+              {success ? <Success success={success} onClose={onCloseSuccess} /> : null}
+            </Grid>
+            <Grid item xs={12}>
               {info ? <Info info={info} onClose={onCloseInfo} /> : null}
             </Grid>
             <Grid item xs={12}>
-              <ErrorAlert errors={errors} onClose={onCloseError} />
+              {errors ? <ErrorAlert errors={errors} onClose={onCloseError} /> : null}
             </Grid>
             <Grid item xs={12}>
               {signupRequest.data?.data ? (

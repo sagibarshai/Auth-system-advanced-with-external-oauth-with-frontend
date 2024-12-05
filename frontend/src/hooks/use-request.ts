@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
+import axios, { Axios, AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
 import { useCallback, useState } from "react";
 
 interface UseRequestReturn<T, R> {
@@ -13,10 +13,15 @@ interface Props {
   axiosInstance?: AxiosInstance;
 }
 
-export const useRequest = <T, R = unknown>({ config, axiosInstance = axios }: Props): UseRequestReturn<T, R> => {
+type Errors<R> = {
+  customErrors: R;
+  errorResponse: AxiosError;
+} | null;
+
+export const useRequest = <T, R = unknown>({ config, axiosInstance = axios }: Props): UseRequestReturn<T, Errors<R>> => {
   const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<T | null>(null);
-  const [error, setError] = useState<R | null>(null);
+  const [error, setError] = useState<Errors<R> | null>(null);
 
   const makeRequest = async (): Promise<void> => {
     setLoading(true);
@@ -29,8 +34,8 @@ export const useRequest = <T, R = unknown>({ config, axiosInstance = axios }: Pr
     } catch (err: AxiosError | unknown) {
       if (err instanceof AxiosError) {
         if (err.response?.status && err.response.status < 400) setData(err.response?.data);
-        else setError(err.response?.data);
-      } else setError(err as R);
+        else setError({ customErrors: err.response?.data as R, errorResponse: err as AxiosError });
+      } else setError({ customErrors: err as R, errorResponse: err as AxiosError });
     } finally {
       setLoading(false);
     }

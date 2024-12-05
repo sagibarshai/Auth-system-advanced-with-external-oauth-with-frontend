@@ -24,9 +24,8 @@ const EmailVerification: React.FC = () => {
   }, []);
   useEffect(() => {
     if (data?.message) {
-      appNavigate(`SIGNIN`, { state: { info: [data.message] } });
-    } else if (error) appNavigate("SIGNIN", { state: { errors: error } });
-    else appNavigate("SIGNIN");
+      appNavigate(`SIGNIN`, { state: { success: [data.message] } });
+    } else if (error) appNavigate("SIGNIN", { state: { errors: error.customErrors } });
   }, [data, error]);
 
   return null;
