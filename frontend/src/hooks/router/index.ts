@@ -50,5 +50,8 @@ export const useAppRouter = () => {
     return params[key] as T;
   };
 
-  return { appNavigate, getPageState, getParam, getRouteParams };
+  // get path name
+  const getPathName = () => location.pathname;
+
+  return { appNavigate, getPageState, getParam, getRouteParams, getPathName };
 };

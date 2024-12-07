@@ -1,5 +1,10 @@
 import axios, { Axios, AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
 import { useCallback, useState } from "react";
+import { AuthEndPoints } from "../api/backend/auth/endpoints";
+
+interface AppAxiosRequestConfig extends AxiosRequestConfig {
+  url: AuthEndPoints;
+}
 
 interface UseRequestReturn<T, R> {
   loading: boolean;
@@ -9,7 +14,7 @@ interface UseRequestReturn<T, R> {
 }
 
 interface Props {
-  config: AxiosRequestConfig;
+  config: AppAxiosRequestConfig;
   axiosInstance?: AxiosInstance;
 }
 

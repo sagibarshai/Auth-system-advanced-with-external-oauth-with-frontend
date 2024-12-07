@@ -3,9 +3,20 @@ import { Outlet } from "react-router-dom";
 import axios from "axios";
 import { createTheme, CssBaseline, Container, ThemeProvider } from "@mui/material";
 import { useAppRouter } from "./hooks/router";
+import { useRequest } from "./hooks/use-request";
+import { backendAxiosInstance } from "./api/backend/auth/backend-axios-instance";
+import { AuthEndPoints } from "./api/backend/auth/endpoints";
 
 const App = () => {
-  const { appNavigate } = useAppRouter();
+  const { appNavigate, getPathName } = useAppRouter();
+
+  const { data, error, fetchData } = useRequest({
+    axiosInstance: backendAxiosInstance,
+    config: {
+      url: AuthEndPoints["CURRENT_USER"],
+      method: "get",
+    },
+  });
 
   const theme = createTheme({
     components: {
@@ -24,19 +35,18 @@ const App = () => {
     },
   });
 
-  const getCurrentUser = async () => {
-    try {
-      const response = await axios.get("http://localhost:4000/api/auth/currentUser", {
-        withCredentials: true,
-      });
-      const user = response.data;
-      appNavigate("HOME");
-    } catch (err) {}
-  };
-
+  // fetch user data
   useEffect(() => {
-    getCurrentUser();
+    fetchData();
   }, []);
+
+  // navigate on mount to the proper route
+  useEffect(() => {
+    const pathName = getPathName();
+    if (error && pathName === "/") appNavigate("SIGNIN");
+    else if (data && pathName === "/") appNavigate("HOME");
+  }, [error, data]);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
