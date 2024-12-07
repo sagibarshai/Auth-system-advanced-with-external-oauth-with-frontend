@@ -14,6 +14,7 @@ const EmailVerification: React.FC = () => {
   const { data, error, fetchData } = useRequest<ApiResponseJson, CustomErrorMessage>({
     axiosInstance: backendAxiosInstance,
     config: {
+      //@ts-ignore
       url: `${AuthEndPoints.EMAIL_VERIFICATION}/${id}/${token}`,
       method: "get",
     },
@@ -22,6 +23,7 @@ const EmailVerification: React.FC = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
   useEffect(() => {
     if (data?.message) {
       appNavigate(`SIGNIN`, { state: { success: [data.message] } });
