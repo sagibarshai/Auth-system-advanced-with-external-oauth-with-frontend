@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import { AuthEndPoints } from "../api/backend/auth/endpoints";
 
 interface AppAxiosRequestConfig extends AxiosRequestConfig {
-  url: AuthEndPoints;
+  url?: AuthEndPoints;
 }
 
 interface UseRequestReturn<T, R> {

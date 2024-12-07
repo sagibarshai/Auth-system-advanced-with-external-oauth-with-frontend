@@ -22,12 +22,9 @@ import { ApiResponseJson, CustomErrorMessage, SafeUser } from "../../api/backend
 import AppButton from "../../components/buttons";
 import Info from "../../components/alerts/info";
 import Success from "../../components/alerts/success";
-import { useAppDispatch } from "../../hooks/redux";
-import { setUser } from "../../redux/features/user";
 import { useAppRouter } from "../../hooks/router";
 
 const SignupPage: React.FC = () => {
-  const dispatch = useAppDispatch();
   const { appNavigate } = useAppRouter();
   const [info, setInfo] = useState<string[] | null>(null);
   const [success, setSuccess] = useState<string[] | null>(null);
@@ -127,10 +124,6 @@ const SignupPage: React.FC = () => {
     },
   });
 
-  useEffect(() => {
-    if (signupRequest.data?.data) dispatch(setUser(signupRequest.data.data));
-  }, [signupRequest.data]);
-
   const { isFormValid } = useForm({ inputs: [firstNameState, lastNameState, emailState, passwordState, phoneNumberState] });
 
   const handleNavigateSignIn = () => {
@@ -184,7 +177,19 @@ const SignupPage: React.FC = () => {
   };
 
   return (
-    <FormControl>
+    <FormControl
+      sx={{
+        display: "flex",
+        boxShadow: 3,
+        justifyContent: "center",
+        alignItems: "center",
+        width: "50%",
+        height: "auto",
+        padding: "24px",
+        borderRadius: "6px",
+        margin: "auto",
+      }}
+    >
       <Container disableGutters>
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", gap: "12px" }}>
           <Typography variant="h4" gutterBottom>
@@ -234,7 +239,10 @@ const SignupPage: React.FC = () => {
                     text={`Resend Email Verification`}
                     onClick={resendEmailVerificationRequest.fetchData}
                     loading={resendEmailVerificationRequest.loading}
-                    disabled={Boolean(resendEmailVerificationRequest.data?.remainAttempts === 0)}
+                    disabled={
+                      Boolean(resendEmailVerificationRequest.data?.remainAttempts === 0) ||
+                      resendEmailVerificationRequest.error?.errorResponse.response?.status === 400
+                    }
                   />
                 </Box>
               ) : (

@@ -6,6 +6,7 @@ import SignupPage from "../pages/auth/signup";
 import EmailVerification from "../pages/auth/email-verification";
 import AuthGooglePage from "../pages/auth/google";
 import HomePage from "../pages/home";
+import SignOutPage from "../pages/auth/signout";
 
 export enum Pages {
   SIGNIN = "/auth/signin",
@@ -13,6 +14,7 @@ export enum Pages {
   GOOGLE_AUTH = "/auth/google",
   EMAIL_VERIFICATION = "/auth/email-verification",
   HOME = "/home",
+  SIGNOUT = "/auth/signout",
 }
 
 export const router = createBrowserRouter([
@@ -39,6 +41,10 @@ export const router = createBrowserRouter([
           {
             path: "/auth/google",
             element: <AuthGooglePage />,
+          },
+          {
+            path: "/auth/signout",
+            element: <SignOutPage />,
           },
         ],
       },

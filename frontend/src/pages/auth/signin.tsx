@@ -17,18 +17,24 @@ import { AuthEndPoints } from "../../api/backend/auth/endpoints";
 import { Props as InputProps } from "../../components/inputs/text";
 import { useForm } from "../../hooks/use-form";
 import ErrorAlert from "../../components/alerts/errors";
-import { CustomErrorMessage, SafeUser } from "../../api/backend/auth/types";
+import { ApiResponseJson, CustomErrorMessage, SafeUser } from "../../api/backend/auth/types";
 import AppButton from "../../components/buttons";
 
 import Info from "../../components/alerts/info";
 import Success from "../../components/alerts/success";
 import { useAppRouter } from "../../hooks/router";
+import { setUser } from "../../redux/features/user";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 
 const SignInPage: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user);
+  console.log("user ", user);
   const { appNavigate, getPageState } = useAppRouter();
   const [info, setInfo] = useState<string[] | null>(null);
   const [success, setSuccess] = useState<string[] | null>(null);
   const [errors, setErrors] = useState<CustomErrorMessage | null>(null);
+  const [unVerifyEmail, setUnVerifyEmail] = useState<string | null>(null);
 
   const [emailState, setEmail, emailStatics] = useInput<InputProps>({
     stateProps: { isValid: false, showError: false, value: "" },
@@ -57,7 +63,7 @@ const SignInPage: React.FC = () => {
     },
   });
 
-  const signInRequest = useRequest<SafeUser, CustomErrorMessage>({
+  const signInRequest = useRequest<ApiResponseJson<SafeUser>, CustomErrorMessage>({
     axiosInstance: backendAxiosInstance,
     config: {
       method: "post",
@@ -66,6 +72,26 @@ const SignInPage: React.FC = () => {
         email: emailState.value,
         password: passwordState.value,
       },
+    },
+  });
+  // set the UnVerifyEmail to the one that is unverified
+  useEffect(() => {
+    if (signInRequest.error?.errorResponse.response?.status === 403) {
+      setUnVerifyEmail(emailState.value);
+    }
+  }, [signInRequest.error]);
+
+  // set the UnVerifyEmail to null if changes
+  useEffect(() => {
+    setUnVerifyEmail(null);
+  }, [emailState.value]);
+
+  const resendEmailVerificationRequest = useRequest<ApiResponseJson<{ message: string; remainAttempts: number }>, CustomErrorMessage>({
+    axiosInstance: backendAxiosInstance,
+    config: {
+      url: AuthEndPoints.RESEND_EMAIL_VERIFICATION,
+      method: "post",
+      data: { email: unVerifyEmail },
     },
   });
 
@@ -85,8 +111,9 @@ const SignInPage: React.FC = () => {
   useEffect(() => {
     let updatedErrors: CustomErrorMessage = [];
     if (signInRequest.error) updatedErrors = [...updatedErrors, ...signInRequest.error.customErrors];
+    if (resendEmailVerificationRequest.error) updatedErrors = [...updatedErrors, ...resendEmailVerificationRequest.error.customErrors];
     setErrors(updatedErrors);
-  }, [signInRequest.error]);
+  }, [signInRequest.error, resendEmailVerificationRequest.error]);
 
   // set the first error from pageState only for once!
   useEffect(() => {
@@ -97,19 +124,27 @@ const SignInPage: React.FC = () => {
 
   // update the info from the email verification
   useEffect(() => {
-    // let updatedInfo: string[] = [];
-    // if (pageState.info) updatedInfo = [...pageState.info];
-    // setInfo(updatedInfo);
-  }, []);
+    let updatedInfo: string[] = [];
+    if (resendEmailVerificationRequest.data)
+      updatedInfo = [
+        `${resendEmailVerificationRequest.data.data?.message}, You have ${resendEmailVerificationRequest.data.data?.remainAttempts} remain attempt`,
+      ];
+    setInfo(updatedInfo);
+  }, [resendEmailVerificationRequest.data]);
 
   // update the success from the pageState
-
-  console.log(pageState);
   useEffect(() => {
     let updatedSuccess: string[] = [];
     if (pageState.success) updatedSuccess = [...pageState.success];
     setSuccess(updatedSuccess);
   }, []);
+
+  useEffect(() => {
+    if (signInRequest.data?.data) {
+      dispatch(setUser(signInRequest.data.data));
+      appNavigate("HOME");
+    }
+  }, [signInRequest.data]);
 
   const onCloseError = (index: number) => {
     if (!errors) return;
@@ -126,10 +161,20 @@ const SignInPage: React.FC = () => {
     setSuccess(success.filter((_, idx) => idx !== index));
   };
 
-  console.log("signInRequest.error?.errorResponse ", signInRequest.error?.errorResponse);
-
   return (
-    <FormControl>
+    <FormControl
+      sx={{
+        display: "flex",
+        boxShadow: 3,
+        justifyContent: "center",
+        alignItems: "center",
+        width: "50%",
+        height: "auto",
+        padding: "24px",
+        borderRadius: "6px",
+        margin: "auto",
+      }}
+    >
       <Container disableGutters>
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", gap: "12px" }}>
           <Typography variant="h4" gutterBottom>
@@ -158,12 +203,15 @@ const SignInPage: React.FC = () => {
               {errors && <ErrorAlert onClose={onCloseError} errors={errors} />}
             </Grid>
             <Grid item xs={12}>
-              {signInRequest?.error?.errorResponse?.response?.status === 403 ? (
+              {unVerifyEmail ? (
                 <AppButton
-                  onClick={signInRequest.fetchData}
-                  disabled={!isFormValid}
-                  text={"Resend Email Verification"}
-                  loading={signInRequest.loading}
+                  text={`Resend Email Verification`}
+                  onClick={resendEmailVerificationRequest.fetchData}
+                  loading={resendEmailVerificationRequest.loading}
+                  disabled={
+                    Boolean(resendEmailVerificationRequest.data?.data?.remainAttempts === 0) ||
+                    resendEmailVerificationRequest.error?.errorResponse.response?.status === 400
+                  }
                 />
               ) : null}
 
