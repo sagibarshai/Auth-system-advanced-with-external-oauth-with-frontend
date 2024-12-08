@@ -29,7 +29,6 @@ import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 const SignInPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
-  console.log("user ", user);
   const { appNavigate, getPageState } = useAppRouter();
   const [info, setInfo] = useState<string[] | null>(null);
   const [success, setSuccess] = useState<string[] | null>(null);

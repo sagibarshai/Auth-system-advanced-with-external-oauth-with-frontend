@@ -7,8 +7,11 @@ import EmailVerification from "../pages/auth/email-verification";
 import AuthGooglePage from "../pages/auth/google";
 import HomePage from "../pages/home";
 import SignOutPage from "../pages/auth/signout";
+import ErrorPage from "../pages/error";
 
 export enum Pages {
+  ROOT = "/",
+  AUTH = "/auth",
   SIGNIN = "/auth/signin",
   SIGNUP = "/auth/signup",
   GOOGLE_AUTH = "/auth/google",
@@ -21,35 +24,36 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement: <ErrorPage />,
     children: [
       {
-        path: "/auth",
+        path: Pages["AUTH"],
         element: <AuthPages />,
         children: [
           {
-            path: "/auth/signin",
+            path: Pages["SIGNIN"],
             element: <SignInPage />,
           },
           {
-            path: "/auth/signup",
+            path: Pages["SIGNUP"],
             element: <SignupPage />,
           },
           {
-            path: "/auth/email-verification/:id/:token",
+            path: Pages["EMAIL_VERIFICATION"] + "/:id/:token",
             element: <EmailVerification />,
           },
           {
-            path: "/auth/google",
+            path: Pages["GOOGLE_AUTH"],
             element: <AuthGooglePage />,
           },
           {
-            path: "/auth/signout",
+            path: Pages["SIGNOUT"],
             element: <SignOutPage />,
           },
         ],
       },
       {
-        path: "/home",
+        path: Pages["HOME"],
         element: <HomePage />,
       },
     ],
