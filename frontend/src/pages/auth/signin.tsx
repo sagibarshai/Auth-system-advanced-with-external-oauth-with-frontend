@@ -81,7 +81,7 @@ const SignInPage: React.FC = () => {
     }
   }, [signInRequest.error]);
 
-  // set the UnVerifyEmail to null if changes
+  // set the UnVerifyEmail to null if email changes
   useEffect(() => {
     setUnVerifyEmail(null);
   }, [emailState.value]);
@@ -113,6 +113,7 @@ const SignInPage: React.FC = () => {
     if (signInRequest.error) updatedErrors = [...updatedErrors, ...signInRequest.error.customErrors];
     if (resendEmailVerificationRequest.error) updatedErrors = [...updatedErrors, ...resendEmailVerificationRequest.error.customErrors];
     setErrors(updatedErrors);
+    console.log("updatedErrors ", updatedErrors);
   }, [signInRequest.error, resendEmailVerificationRequest.error]);
 
   // set the first error from pageState only for once!
@@ -127,7 +128,7 @@ const SignInPage: React.FC = () => {
     let updatedInfo: string[] = [];
     if (resendEmailVerificationRequest.data)
       updatedInfo = [
-        `${resendEmailVerificationRequest.data.data?.message}, You have ${resendEmailVerificationRequest.data.data?.remainAttempts} remain attempt`,
+        `${resendEmailVerificationRequest.data.message}, You have ${resendEmailVerificationRequest.data.data?.remainAttempts} remain attempt`,
       ];
     setInfo(updatedInfo);
   }, [resendEmailVerificationRequest.data]);
@@ -139,6 +140,7 @@ const SignInPage: React.FC = () => {
     setSuccess(updatedSuccess);
   }, []);
 
+  // update redux  (user slice)
   useEffect(() => {
     if (signInRequest.data?.data) {
       dispatch(setUser(signInRequest.data.data));
@@ -208,10 +210,7 @@ const SignInPage: React.FC = () => {
                   text={`Resend Email Verification`}
                   onClick={resendEmailVerificationRequest.fetchData}
                   loading={resendEmailVerificationRequest.loading}
-                  disabled={
-                    Boolean(resendEmailVerificationRequest.data?.data?.remainAttempts === 0) ||
-                    resendEmailVerificationRequest.error?.errorResponse.response?.status === 400
-                  }
+                  disabled={Boolean(resendEmailVerificationRequest.data?.data?.remainAttempts === 0)}
                 />
               ) : null}
 

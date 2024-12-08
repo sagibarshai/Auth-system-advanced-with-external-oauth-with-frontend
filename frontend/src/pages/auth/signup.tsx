@@ -115,7 +115,7 @@ const SignupPage: React.FC = () => {
     },
   });
 
-  const resendEmailVerificationRequest = useRequest<{ message: string; remainAttempts: number }, CustomErrorMessage>({
+  const resendEmailVerificationRequest = useRequest<ApiResponseJson<{ message: string; remainAttempts: number }>, CustomErrorMessage>({
     axiosInstance: backendAxiosInstance,
     config: {
       url: AuthEndPoints.RESEND_EMAIL_VERIFICATION,
@@ -137,13 +137,8 @@ const SignupPage: React.FC = () => {
   // set the info from email verification
   useEffect(() => {
     let updatedInfo: string[] = [];
-    if (resendEmailVerificationRequest.data) {
-      if (resendEmailVerificationRequest.data.remainAttempts > 0) {
-        updatedInfo = [`${resendEmailVerificationRequest.data.message} (${resendEmailVerificationRequest.data.remainAttempts} Attempts Remain)`];
-      } else {
-        let updatedErrors: CustomErrorMessage = errors || [];
-        setErrors([...updatedErrors, { field: "email", message: `${resendEmailVerificationRequest.data.message} No Attempts Remain)` }]);
-      }
+    if (resendEmailVerificationRequest.data?.data) {
+      updatedInfo = [`${resendEmailVerificationRequest.data.message} (${resendEmailVerificationRequest?.data.data.remainAttempts} Attempts Remain)`];
     }
 
     setInfo(updatedInfo);
@@ -240,7 +235,7 @@ const SignupPage: React.FC = () => {
                     onClick={resendEmailVerificationRequest.fetchData}
                     loading={resendEmailVerificationRequest.loading}
                     disabled={
-                      Boolean(resendEmailVerificationRequest.data?.remainAttempts === 0) ||
+                      Boolean(resendEmailVerificationRequest.data?.data?.remainAttempts === 0) ||
                       resendEmailVerificationRequest.error?.errorResponse.response?.status === 400
                     }
                   />
