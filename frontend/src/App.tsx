@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import axios from "axios";
 import { createTheme, CssBaseline, Container, ThemeProvider } from "@mui/material";
 import { useAppRouter } from "./hooks/router";
 import { useRequest } from "./hooks/use-request";
@@ -25,21 +24,37 @@ const App = () => {
 
   const theme = createTheme({
     components: {
-      MuiCssBaseline: {
+      MuiFormControl: {
         styleOverrides: {
-          "#root": {
-            height: "100vh",
-            width: "100vw",
-          },
-          "*": {
+          root: ({ theme }) => ({
+            display: "flex",
+            boxShadow: theme.shadows[3],
+            justifyContent: "center",
+            alignItems: "center",
+            width: "50%",
+            height: "auto",
+            padding: theme.spacing(3),
+            borderRadius: theme.shape.borderRadius,
+            margin: "auto",
+            gap: theme.spacing(2),
+          }),
+        },
+      },
+      MuiTextField: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            display: "block",
+            boxShadow: "none",
+            justifyContent: "start",
+            alignItems: "start",
+            width: "auto",
+            padding: theme.spacing(0),
             margin: 0,
-            padding: 0,
-          },
+          }),
         },
       },
     },
   });
-
   // fetch user data
   useEffect(() => {
     fetchData();
@@ -52,8 +67,6 @@ const App = () => {
     if (error && pathName === "/") appNavigate("SIGNIN");
     else if (data && pathName === "/") appNavigate("HOME");
   }, [error, data?.data]);
-
-  console.log("user ", user);
 
   return (
     <ThemeProvider theme={theme}>

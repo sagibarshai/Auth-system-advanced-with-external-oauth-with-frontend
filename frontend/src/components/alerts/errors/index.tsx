@@ -1,5 +1,5 @@
 import { Alert, AlertTitle, Container } from "@mui/material";
-import { CustomErrorMessage } from "../../api/backend/auth/types";
+import { CustomErrorMessage } from "../../../api/backend/auth/types";
 
 interface Props {
   errors: string[] | CustomErrorMessage | null;

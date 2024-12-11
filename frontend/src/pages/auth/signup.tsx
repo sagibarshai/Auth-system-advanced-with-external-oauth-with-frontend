@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Container, Button, Typography, Box, Grid, FormControl } from "@mui/material";
+import { Container, Typography, Box, Grid, FormControl } from "@mui/material";
 
-import PhoneInput, { Props as PhoneInputProps } from "../../components/inputs/phone";
 import TextInput from "../../components/inputs/text";
 import PasswordInput from "../../components/inputs/password";
 
@@ -80,13 +79,12 @@ const SignupPage: React.FC = () => {
     },
   });
 
-  const [phoneNumberState, setPhoneNumber, phoneNumberStatics] = useInput<PhoneInputProps>({
+  const [phoneNumberState, setPhoneNumber, phoneNumberStatics] = useInput<InputProps>({
     stateProps: { isValid: true, showError: false, value: "" },
     staticsProps: {
       required: false,
       errorMsg: "Phone number should be from IL and valid",
       label: "Phone number",
-      countryCode: "+972",
       onChange: (value) => {
         const updatedValue = value.match(onlyNumbersRegex) && value.length <= 10 ? value : phoneNumberState.value;
 
@@ -171,91 +169,84 @@ const SignupPage: React.FC = () => {
     setSuccess(success?.filter((_, i) => i !== index));
   };
 
+  console.log("Sucsess ", success);
+
   return (
-    <FormControl
-      sx={{
-        display: "flex",
-        boxShadow: 3,
-        justifyContent: "center",
-        alignItems: "center",
-        width: "50%",
-        height: "auto",
-        padding: "24px",
-        borderRadius: "6px",
-        margin: "auto",
-      }}
-    >
-      <Container disableGutters>
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", gap: "12px" }}>
-          <Typography variant="h4" gutterBottom>
-            Sign Up
-          </Typography>
+    <FormControl>
+      <Typography variant="h4" gutterBottom>
+        Sign Up
+      </Typography>
+
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
           <AppButton variant="text" onClick={handleNavigateSignIn} text={`Already Have an Account? Sign In Here`} disabled={false} />
-          <Grid container spacing={2}>
-            {/* First Name */}
-            <Grid item xs={12} sm={6}>
-              <TextInput stateProps={firstNameState} staticsProps={firstNameStatics} />
-            </Grid>
+        </Grid>
+        {/* First Name */}
+        <Grid item xs={6}>
+          <TextInput stateProps={firstNameState} staticsProps={firstNameStatics} />
+        </Grid>
 
-            {/* Last Name */}
-            <Grid item xs={12} sm={6}>
-              <TextInput stateProps={lastNameState} staticsProps={lastNameStatics} />
-            </Grid>
+        {/* Last Name */}
+        <Grid item xs={6}>
+          <TextInput stateProps={lastNameState} staticsProps={lastNameStatics} />
+        </Grid>
 
-            {/* Phone Number */}
-            <Grid item xs={12}>
-              <PhoneInput stateProps={phoneNumberState} staticsProps={phoneNumberStatics} />
-            </Grid>
+        {/* Phone Number */}
+        <Grid item xs={12}>
+          <TextInput stateProps={phoneNumberState} staticsProps={phoneNumberStatics} />
+        </Grid>
 
-            {/* Email */}
-            <Grid item xs={12}>
-              <TextInput stateProps={emailState} staticsProps={emailStatics} />
-            </Grid>
+        {/* Email */}
+        <Grid item xs={12}>
+          <TextInput stateProps={emailState} staticsProps={emailStatics} />
+        </Grid>
 
-            {/* Password */}
-            <Grid item xs={12}>
-              <PasswordInput stateProps={passwordState} staticsProps={passwordStatics} />
-            </Grid>
+        {/* Password */}
+        <Grid item xs={12}>
+          <PasswordInput stateProps={passwordState} staticsProps={passwordStatics} />
+        </Grid>
 
-            {/* Submit Button */}
-            <Grid item xs={12}>
-              {success ? <Success success={success} onClose={onCloseSuccess} /> : null}
-            </Grid>
-            <Grid item xs={12}>
-              {info ? <Info info={info} onClose={onCloseInfo} /> : null}
-            </Grid>
-            <Grid item xs={12}>
-              {errors ? <ErrorAlert errors={errors} onClose={onCloseError} /> : null}
-            </Grid>
-            <Grid item xs={12}>
-              {signupRequest.data?.data ? (
-                <Box>
-                  <AppButton
-                    text={`Resend Email Verification`}
-                    onClick={resendEmailVerificationRequest.fetchData}
-                    loading={resendEmailVerificationRequest.loading}
-                    disabled={
-                      Boolean(resendEmailVerificationRequest.data?.data?.remainAttempts === 0) ||
-                      resendEmailVerificationRequest.error?.errorResponse.response?.status === 400
-                    }
-                  />
-                </Box>
-              ) : (
-                <AppButton onClick={signupRequest.fetchData} disabled={!isFormValid} text={"Sign Up"} loading={signupRequest.loading} />
-              )}
-            </Grid>
+        {success && success.length ? (
+          <Grid item xs={12}>
+            <Success success={success} onClose={onCloseSuccess} />
           </Grid>
-          <AppButton
-            variant="text"
-            onClick={handleGoogleNavigation}
-            text={
-              <Box sx={{ display: "flex", gap: "12px" }}>
-                <GoogleIcon /> Continue With Google
-              </Box>
-            }
-          />
-        </Box>
-      </Container>
+        ) : null}
+        {info && info.length ? (
+          <Grid item xs={12}>
+            <Info info={info} onClose={onCloseInfo} />
+          </Grid>
+        ) : null}
+        {errors && errors.length ? (
+          <Grid item xs={12}>
+            <ErrorAlert errors={errors} onClose={onCloseError} />
+          </Grid>
+        ) : null}
+
+        <Grid item xs={12}>
+          {signupRequest.data?.data ? (
+            <AppButton
+              text={`Resend Email Verification`}
+              onClick={resendEmailVerificationRequest.fetchData}
+              loading={resendEmailVerificationRequest.loading}
+              disabled={
+                Boolean(resendEmailVerificationRequest.data?.data?.remainAttempts === 0) ||
+                resendEmailVerificationRequest.error?.errorResponse.response?.status === 400
+              }
+            />
+          ) : (
+            <AppButton onClick={signupRequest.fetchData} disabled={!isFormValid} text={"Sign Up"} loading={signupRequest.loading} />
+          )}
+        </Grid>
+      </Grid>
+      <AppButton
+        variant="text"
+        onClick={handleGoogleNavigation}
+        text={
+          <Box sx={{ display: "flex", gap: "12px" }}>
+            <GoogleIcon /> Continue With Google
+          </Box>
+        }
+      />
     </FormControl>
   );
 };

@@ -2,6 +2,7 @@ import { IconButton, InputAdornment, TextField, Tooltip, Typography, useTheme } 
 import { Props as BaseInputProps } from "../inputs/types";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";
+import InputErrorMessage from "./input-error-message";
 
 export interface Props extends BaseInputProps {}
 
@@ -24,20 +25,7 @@ const PasswordInput: React.FC<Props> = ({ stateProps, staticsProps }) => {
       <TextField
         type={showPassword ? "text" : "password"}
         required={required}
-        helperText={
-          <Typography
-            variant="caption"
-            style={{
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              display: "block",
-              minHeight: helperTextHeight, // Use the calculated height
-            }}
-          >
-            {shouldShowError ? errorMsg : ""}
-          </Typography>
-        }
+        helperText={<InputErrorMessage errorMsg={shouldShowError ? errorMsg : ""} />}
         error={shouldShowError}
         value={value}
         fullWidth
