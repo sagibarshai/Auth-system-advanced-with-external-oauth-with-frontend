@@ -25,6 +25,8 @@ import Success from "../../components/alerts/success";
 import { useAppRouter } from "../../hooks/router";
 import { setUser } from "../../redux/features/user";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { AppIconGoogle } from "../../icons";
+import GoogleButton from "../../components/buttons/google";
 
 const SignInPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -99,10 +101,6 @@ const SignInPage: React.FC = () => {
     appNavigate("SIGNUP");
   };
 
-  const handleGoogleNavigation = () => {
-    appNavigate("GOOGLE_AUTH");
-  };
-
   const pageState = useMemo(() => getPageState(), []);
 
   // set the errors from the request, override the pageState error
@@ -165,7 +163,6 @@ const SignInPage: React.FC = () => {
       <Typography variant="h4" gutterBottom>
         Sign In
       </Typography>
-      <AppButton variant="text" onClick={handleNavigateSignUp} text={`Don't Have an Account? Sign Up Here`} disabled={false} />
       <Grid container spacing={2}>
         {/* Email */}
         <Grid item xs={12}>
@@ -196,7 +193,7 @@ const SignInPage: React.FC = () => {
         <Grid item xs={12}>
           {unVerifyEmail ? (
             <AppButton
-              text={`Resend Email Verification`}
+              text={`Resend email verification`}
               onClick={resendEmailVerificationRequest.fetchData}
               loading={resendEmailVerificationRequest.loading}
               disabled={Boolean(resendEmailVerificationRequest.data?.data?.remainAttempts === 0)}
@@ -206,15 +203,10 @@ const SignInPage: React.FC = () => {
           <AppButton onClick={signInRequest.fetchData} disabled={!isFormValid} text={"Sign In"} loading={signInRequest.loading} />
         </Grid>
       </Grid>
-      <AppButton
-        variant="text"
-        onClick={handleGoogleNavigation}
-        text={
-          <Box sx={{ display: "flex", gap: "12px" }}>
-            <GoogleIcon /> Continue With Google
-          </Box>
-        }
-      />
+
+      <GoogleButton />
+
+      <AppButton variant="text" onClick={handleNavigateSignUp} text={`Don't have an account? Sign up here`} disabled={false} />
     </FormControl>
   );
 };

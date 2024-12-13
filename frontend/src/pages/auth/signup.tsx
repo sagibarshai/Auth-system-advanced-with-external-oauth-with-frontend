@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Container, Typography, Box, Grid, FormControl } from "@mui/material";
+import { Typography, Box, Grid, FormControl } from "@mui/material";
 
 import TextInput from "../../components/inputs/text";
 import PasswordInput from "../../components/inputs/password";
-
-import GoogleIcon from "@mui/icons-material/Google";
 
 import { useInput } from "../../hooks/use-input";
 import { useRequest } from "../../hooks/use-request";
@@ -22,12 +20,13 @@ import AppButton from "../../components/buttons";
 import Info from "../../components/alerts/info";
 import Success from "../../components/alerts/success";
 import { useAppRouter } from "../../hooks/router";
+import GoogleButton from "../../components/buttons/google";
 
 const SignupPage: React.FC = () => {
   const { appNavigate } = useAppRouter();
+
   const [info, setInfo] = useState<string[] | null>(null);
   const [success, setSuccess] = useState<string[] | null>(null);
-
   const [errors, setErrors] = useState<CustomErrorMessage | null>(null);
 
   const [firstNameState, setFirstName, firstNameStatics] = useInput<InputProps>({
@@ -128,10 +127,6 @@ const SignupPage: React.FC = () => {
     appNavigate("SIGNIN");
   };
 
-  const handleGoogleNavigation = () => {
-    appNavigate("GOOGLE_AUTH");
-  };
-
   // set the info from email verification
   useEffect(() => {
     let updatedInfo: string[] = [];
@@ -169,8 +164,6 @@ const SignupPage: React.FC = () => {
     setSuccess(success?.filter((_, i) => i !== index));
   };
 
-  console.log("Sucsess ", success);
-
   return (
     <FormControl>
       <Typography variant="h4" gutterBottom>
@@ -178,9 +171,6 @@ const SignupPage: React.FC = () => {
       </Typography>
 
       <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <AppButton variant="text" onClick={handleNavigateSignIn} text={`Already Have an Account? Sign In Here`} disabled={false} />
-        </Grid>
         {/* First Name */}
         <Grid item xs={6}>
           <TextInput stateProps={firstNameState} staticsProps={firstNameStatics} />
@@ -191,14 +181,13 @@ const SignupPage: React.FC = () => {
           <TextInput stateProps={lastNameState} staticsProps={lastNameStatics} />
         </Grid>
 
-        {/* Phone Number */}
-        <Grid item xs={12}>
-          <TextInput stateProps={phoneNumberState} staticsProps={phoneNumberStatics} />
-        </Grid>
-
         {/* Email */}
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <TextInput stateProps={emailState} staticsProps={emailStatics} />
+        </Grid>
+        {/* Phone Number */}
+        <Grid item xs={6}>
+          <TextInput stateProps={phoneNumberState} staticsProps={phoneNumberStatics} />
         </Grid>
 
         {/* Password */}
@@ -225,7 +214,7 @@ const SignupPage: React.FC = () => {
         <Grid item xs={12}>
           {signupRequest.data?.data ? (
             <AppButton
-              text={`Resend Email Verification`}
+              text={`Resend email verification`}
               onClick={resendEmailVerificationRequest.fetchData}
               loading={resendEmailVerificationRequest.loading}
               disabled={
@@ -238,15 +227,9 @@ const SignupPage: React.FC = () => {
           )}
         </Grid>
       </Grid>
-      <AppButton
-        variant="text"
-        onClick={handleGoogleNavigation}
-        text={
-          <Box sx={{ display: "flex", gap: "12px" }}>
-            <GoogleIcon /> Continue With Google
-          </Box>
-        }
-      />
+
+      <GoogleButton />
+      <AppButton variant="text" onClick={handleNavigateSignIn} text={`Already have an account? Sign in here`} disabled={false} />
     </FormControl>
   );
 };

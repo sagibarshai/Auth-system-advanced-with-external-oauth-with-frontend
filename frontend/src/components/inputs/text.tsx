@@ -21,6 +21,7 @@ const TextInput: React.FC<Props> = ({ stateProps, staticsProps }) => {
         fullWidth
         label={label}
         onChange={(e) => onChange(e.target.value)}
+        variant="outlined"
       />
     </Tooltip>
   );
