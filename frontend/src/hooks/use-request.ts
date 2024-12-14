@@ -1,9 +1,9 @@
-import axios, { Axios, AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
 import { useCallback, useState } from "react";
-import { AuthEndPoints } from "../api/backend/auth/endpoints";
+import { AuthEndPoints, ResendEmailVerificationEndPoint } from "../api/backend/auth/endpoints";
 
 interface AppAxiosRequestConfig extends AxiosRequestConfig {
-  url?: AuthEndPoints;
+  url?: AuthEndPoints | ResendEmailVerificationEndPoint;
 }
 
 interface UseRequestReturn<T, R> {

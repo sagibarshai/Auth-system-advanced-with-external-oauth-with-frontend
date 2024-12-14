@@ -9,12 +9,7 @@ export const useForm = <T extends TextInputProps["stateProps"]>({ inputs }: Prop
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
 
   const checkFormValidation = (inputs: T[]): boolean => {
-    for (let input of inputs) {
-      if (!input.isValid) {
-        return false;
-      }
-    }
-    return true;
+    return inputs.every((input) => input.isValid);
   };
 
   useEffect(() => {

@@ -1,3 +1,6 @@
+// for dynamic string (id and token) ** /id/token
+export type ResendEmailVerificationEndPoint = `/auth/emailVerification/${string}/${string}`;
+
 export enum AuthEndPoints {
   SIGNUP = "/auth/signup",
   SIGNIN = "/auth/signin",

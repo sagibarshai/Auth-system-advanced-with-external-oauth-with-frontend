@@ -23,7 +23,7 @@ export const useAppRouter = () => {
     navigate(Pages[to], options);
   }, []);
 
-  // page state
+  // get page state
   const getPageState = useCallback((): PageState => {
     return {
       errors: location?.state?.errors,

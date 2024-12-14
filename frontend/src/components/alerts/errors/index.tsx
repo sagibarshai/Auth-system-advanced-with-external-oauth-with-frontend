@@ -6,7 +6,7 @@ interface Props {
   onClose: (index: number) => void;
 }
 
-const ErrorAlert: React.FC<Props> = ({ errors, onClose = () => {} }) => {
+const ErrorAlert: React.FC<Props> = ({ errors, onClose }) => {
   if (!errors) return null;
 
   return (

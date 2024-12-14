@@ -1,4 +1,4 @@
-import { IconButton, InputAdornment, TextField, Tooltip, Typography, useTheme } from "@mui/material";
+import { IconButton, InputAdornment, TextField, Tooltip } from "@mui/material";
 import { Props as BaseInputProps } from "../inputs/types";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";

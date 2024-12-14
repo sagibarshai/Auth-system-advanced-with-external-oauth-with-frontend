@@ -3,22 +3,11 @@ import { createTheme } from "@mui/material";
 export const theme = createTheme({
   palette: {
     background: {
-      default: "white",
+      default: "#fffffd",
     },
-  },
-  typography: {
-    allVariants: {},
   },
 
   components: {
-    MuiCssBaseline: {
-      styleOverrides: {
-        body: {
-          backgroundColor: "#f9fcff",
-          backgroundImage: "linear-gradient(147deg, #f9fcff 0%, #dee4ea 74%);",
-        },
-      },
-    },
     MuiContainer: {
       styleOverrides: {
         root: {
@@ -31,7 +20,7 @@ export const theme = createTheme({
       styleOverrides: {
         root: ({ theme }) => ({
           background: "white",
-          boxShadow: "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
+          boxShadow: "hsla(220, 30%, 5%, 0.05) 0px 5px 25px 30px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
           padding: theme.spacing(4),
           gap: theme.spacing(2),
           borderRadius: "2%",

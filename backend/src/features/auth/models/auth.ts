@@ -144,7 +144,6 @@ export const UpdateLoginModel = async (identifier: string | number): Promise<Saf
 
     return storedUserToReturnedStoredUser(storedUser);
   } catch (err) {
-    console.log("err1 ", err);
     throw err;
   }
 };

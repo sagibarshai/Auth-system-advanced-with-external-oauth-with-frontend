@@ -16,6 +16,11 @@ export interface SafeUser {
   provider: "app" | "google";
 }
 
+export interface ResendEmailVerification {
+  message: string;
+  remainAttempts: number;
+}
+
 export interface ApiResponseJson<T extends Record<string, any> = {}> {
   message?: string;
   data?: T;

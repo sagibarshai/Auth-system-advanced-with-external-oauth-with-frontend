@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../store";
 import { SafeUser } from "../../api/backend/auth/types";
 
 type UserState = SafeUser | null;

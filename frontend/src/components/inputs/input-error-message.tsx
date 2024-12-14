@@ -1,7 +1,5 @@
 import { Typography, useTheme } from "@mui/material";
 
-// Calculate the exact height of error message based on theme typography
-
 interface Props {
   errorMsg: string;
 }
@@ -9,6 +7,7 @@ interface Props {
 const InputErrorMessage: React.FC<Props> = ({ errorMsg }) => {
   const theme = useTheme();
   const helperTextHeight = `calc(${theme.typography.caption.lineHeight} * ${theme.typography.caption.fontSize})`;
+  // Calculate the exact height of error message based on theme typography
 
   return (
     <Typography
@@ -18,7 +17,7 @@ const InputErrorMessage: React.FC<Props> = ({ errorMsg }) => {
         textOverflow: "ellipsis",
         whiteSpace: "nowrap",
         display: "block",
-        minHeight: helperTextHeight, // Use the calculated height
+        minHeight: helperTextHeight, // Use the calculated height to prevent UI "jumps"
       }}
     >
       {errorMsg}

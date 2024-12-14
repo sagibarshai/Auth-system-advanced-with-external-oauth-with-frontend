@@ -1,6 +1,6 @@
 const isProd = process.env.NODE_ENV === "production";
 
-if (!process.env.BACKEND_PORT) throw new Error("BACKEND_PORT");
+if (!process.env.BACKEND_PORT) throw new Error("BACKEND_PORT must be define");
 
 export const config = {
   PROD: isProd,

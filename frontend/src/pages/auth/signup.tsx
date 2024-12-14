@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Box, Grid2, FormControl } from "@mui/material";
-
-import TextInput from "../../components/inputs/text";
-import PasswordInput from "../../components/inputs/password";
+import { Typography, Grid2, FormControl } from "@mui/material";
 
 import { useInput } from "../../hooks/use-input";
 import { useRequest } from "../../hooks/use-request";
-
-import { emailRegex, onlyNumbersRegex, phoneRegex, strongPasswordRegex } from "../../utils/regex";
+import { useAppRouter } from "../../hooks/router";
+import { useForm } from "../../hooks/use-form";
 
 import { backendAxiosInstance } from "../../api/backend/auth/backend-axios-instance";
 import { AuthEndPoints } from "../../api/backend/auth/endpoints";
 
-import { Props as InputProps } from "../../components/inputs/text";
-import { useForm } from "../../hooks/use-form";
+import TextInput from "../../components/inputs/text";
+import PasswordInput from "../../components/inputs/password";
 import ErrorAlert from "../../components/alerts/errors";
-import { ApiResponseJson, CustomErrorMessage, SafeUser } from "../../api/backend/auth/types";
 import AppButton from "../../components/buttons";
 import Info from "../../components/alerts/info";
 import Success from "../../components/alerts/success";
-import { useAppRouter } from "../../hooks/router";
 import GoogleButton from "../../components/buttons/google";
+
+import { emailRegex, onlyNumbersRegex, phoneRegex, strongPasswordRegex } from "../../utils/regex";
+
+import { Props as InputProps } from "../../components/inputs/text";
+import { ApiResponseJson, CustomErrorMessage, ResendEmailVerification, SafeUser } from "../../api/backend/auth/types";
 
 const SignupPage: React.FC = () => {
   const { appNavigate } = useAppRouter();
@@ -29,6 +29,7 @@ const SignupPage: React.FC = () => {
   const [success, setSuccess] = useState<string[] | null>(null);
   const [errors, setErrors] = useState<CustomErrorMessage | null>(null);
 
+  // define first name
   const [firstNameState, setFirstName, firstNameStatics] = useInput<InputProps>({
     stateProps: { isValid: true, showError: false, value: "" },
     staticsProps: {
@@ -40,6 +41,7 @@ const SignupPage: React.FC = () => {
     },
   });
 
+  // define last name
   const [lastNameState, setLastName, lastNameStatics] = useInput<InputProps>({
     stateProps: { isValid: true, showError: false, value: "" },
     staticsProps: {
@@ -51,6 +53,7 @@ const SignupPage: React.FC = () => {
     },
   });
 
+  // define email
   const [emailState, setEmail, emailStatics] = useInput<InputProps>({
     stateProps: { isValid: false, showError: false, value: "" },
     staticsProps: {
@@ -62,6 +65,7 @@ const SignupPage: React.FC = () => {
     },
   });
 
+  // define password
   const [passwordState, setPassword, passwordStatics] = useInput<InputProps>({
     stateProps: { isValid: false, showError: false, value: "" },
     staticsProps: {
@@ -78,6 +82,7 @@ const SignupPage: React.FC = () => {
     },
   });
 
+  // define phone number
   const [phoneNumberState, setPhoneNumber, phoneNumberStatics] = useInput<InputProps>({
     stateProps: { isValid: true, showError: false, value: "" },
     staticsProps: {
@@ -86,7 +91,6 @@ const SignupPage: React.FC = () => {
       label: "Phone number",
       onChange: (value) => {
         const updatedValue = value.match(onlyNumbersRegex) && value.length <= 10 ? value : phoneNumberState.value;
-
         setPhoneNumber((prev) => ({
           ...prev,
           value: updatedValue,
@@ -97,6 +101,9 @@ const SignupPage: React.FC = () => {
     },
   });
 
+  const { isFormValid } = useForm({ inputs: [firstNameState, lastNameState, emailState, passwordState, phoneNumberState] });
+
+  // signup request handler
   const signupRequest = useRequest<ApiResponseJson<SafeUser>, CustomErrorMessage>({
     axiosInstance: backendAxiosInstance,
     config: {
@@ -112,7 +119,8 @@ const SignupPage: React.FC = () => {
     },
   });
 
-  const resendEmailVerificationRequest = useRequest<ApiResponseJson<{ message: string; remainAttempts: number }>, CustomErrorMessage>({
+  // resend email verification request handler
+  const resendEmailVerificationRequest = useRequest<ApiResponseJson<ResendEmailVerification>, CustomErrorMessage>({
     axiosInstance: backendAxiosInstance,
     config: {
       url: AuthEndPoints.RESEND_EMAIL_VERIFICATION,
@@ -121,47 +129,43 @@ const SignupPage: React.FC = () => {
     },
   });
 
-  const { isFormValid } = useForm({ inputs: [firstNameState, lastNameState, emailState, passwordState, phoneNumberState] });
-
-  const handleNavigateSignIn = () => {
-    appNavigate("SIGNIN");
-  };
-
-  // set the info from email verification
+  // set the info messages from resend email verification request
   useEffect(() => {
     let updatedInfo: string[] = [];
     if (resendEmailVerificationRequest.data?.data) {
       updatedInfo = [`${resendEmailVerificationRequest.data.message} (${resendEmailVerificationRequest?.data.data.remainAttempts} Attempts Remain)`];
     }
-
     setInfo(updatedInfo);
-  }, [resendEmailVerificationRequest.data, signupRequest.data]);
+  }, [resendEmailVerificationRequest.data]);
 
-  // set the errors from google and email verification max attempt
+  // set the errors from google OAuth and email verification max attempt
   useEffect(() => {
     let updatedErrors: CustomErrorMessage = [];
-    if (resendEmailVerificationRequest.error) updatedErrors = [...updatedErrors, ...resendEmailVerificationRequest.error.customErrors];
+    if (resendEmailVerificationRequest.error) updatedErrors = [...resendEmailVerificationRequest.error.customErrors];
     if (signupRequest.error) updatedErrors = [...updatedErrors, ...signupRequest.error.customErrors];
     setErrors(updatedErrors);
   }, [resendEmailVerificationRequest.error, signupRequest.error]);
 
+  // set the success message after successfully signup
   useEffect(() => {
     if (signupRequest.data) setSuccess([`You sign up successfully, Check you email for email verification link`]);
   }, [signupRequest.data]);
 
-  const onCloseError = (index: number) => {
-    if (!errors) return;
-    setErrors(errors?.filter((_, i) => i !== index));
+  // handlers
+  const onCloseMessage = (type: "info" | "error" | "success", index: number) => {
+    if (type === "info") {
+      if (!info) return;
+      setInfo(info.filter((_, idx) => idx !== index));
+    } else if (type === "success") {
+      if (!success) return;
+      setSuccess(success.filter((_, idx) => idx !== index));
+    } else {
+      if (!errors) return;
+      setErrors(errors?.filter((_, i) => i !== index));
+    }
   };
-
-  const onCloseInfo = (index: number) => {
-    if (!info) return;
-    setInfo(info?.filter((_, i) => i !== index));
-  };
-
-  const onCloseSuccess = (index: number) => {
-    if (!success) return;
-    setSuccess(success?.filter((_, i) => i !== index));
+  const handleNavigateSignIn = () => {
+    appNavigate("SIGNIN");
   };
 
   return (
@@ -200,17 +204,17 @@ const SignupPage: React.FC = () => {
         {/* Messages */}
         {success && success.length ? (
           <Grid2 size={12}>
-            <Success success={success} onClose={onCloseSuccess} />
+            <Success success={success} onClose={(index) => onCloseMessage("success", index)} />
           </Grid2>
         ) : null}
         {info && info.length ? (
           <Grid2 size={12}>
-            <Info info={info} onClose={onCloseInfo} />
+            <Info info={info} onClose={(index) => onCloseMessage("info", index)} />
           </Grid2>
         ) : null}
         {errors && errors.length ? (
           <Grid2 size={12}>
-            <ErrorAlert errors={errors} onClose={onCloseError} />
+            <ErrorAlert errors={errors} onClose={(index) => onCloseMessage("error", index)} />
           </Grid2>
         ) : null}
         <Grid2 size={12}>
@@ -232,7 +236,10 @@ const SignupPage: React.FC = () => {
         </Grid2>
       </Grid2>
 
+      {/* Google OAuth */}
       <GoogleButton />
+
+      {/* Navigate to signin */}
       <AppButton variant="text" onClick={handleNavigateSignIn} text={`Already have an account? Sign in here`} disabled={false} />
     </FormControl>
   );

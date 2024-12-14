@@ -8,14 +8,14 @@ interface Props extends React.PropsWithChildren {
 
 const AppNavLink: React.FC<Props> = ({ to, children }) => {
   return (
-    <NavLink to={Pages[to]} style={{ textDecoration: "none" }}>
+    <NavLink to={Pages[to]} style={{ textDecoration: "none", cursor: "pointer" }}>
       {({ isActive }) => (
         <Typography
           sx={{
             color: "white",
             textDecoration: "underline",
-            fontWeight: isActive ? "bold" : "regular",
-            fontSize: "18px",
+            fontWeight: isActive ? "bolder" : "light",
+            fontSize: "22px",
             padding: "12px 8px",
           }}
         >
