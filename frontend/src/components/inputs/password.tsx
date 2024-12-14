@@ -11,11 +11,6 @@ const PasswordInput: React.FC<Props> = ({ stateProps, staticsProps }) => {
   const { errorMsg, label, onChange, required } = staticsProps;
   const { isValid, showError, value } = stateProps;
 
-  const theme = useTheme();
-
-  // Calculate the exact height of error message based on theme typography
-  const helperTextHeight = `calc(${theme.typography.caption.lineHeight} * ${theme.typography.caption.fontSize})`;
-
   const shouldShowError = !isValid && showError;
 
   const handleShowPasswordToggle = () => setShowPassword((prev) => !prev);

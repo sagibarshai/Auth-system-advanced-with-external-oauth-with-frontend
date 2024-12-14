@@ -1,12 +1,12 @@
-import { Container } from "@mui/material";
+import { Box } from "@mui/material";
 
 import { Outlet } from "react-router-dom";
 
 const AuthPages = () => {
   return (
-    <Container sx={{ height: "100%", width: "100%", display: "flex", justifyContent: "center", alignContent: "center" }}>
+    <Box sx={{ height: "100%", width: "100%", display: "flex" }}>
       <Outlet />
-    </Container>
+    </Box>
   );
 };
 

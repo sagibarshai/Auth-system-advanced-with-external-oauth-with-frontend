@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import { Container, Grid } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { useAppRouter } from "./hooks/router";
 import { useRequest } from "./hooks/use-request";
 import { backendAxiosInstance } from "./api/backend/auth/backend-axios-instance";
@@ -8,7 +8,7 @@ import { AuthEndPoints } from "./api/backend/auth/endpoints";
 import Header from "./components/header";
 import { setUser } from "./redux/features/user";
 import { ApiResponseJson, SafeUser } from "./api/backend/auth/types";
-import { useAppDispatch, useAppSelector } from "./hooks/redux";
+import { useAppDispatch } from "./hooks/redux";
 import { Pages } from "./router";
 
 const App = () => {
@@ -31,16 +31,20 @@ const App = () => {
   useEffect(() => {
     const pathName = getPathName();
     if (data?.data) dispatch(setUser(data.data));
-    if (error && pathName !== Pages.GOOGLE_AUTH) appNavigate("SIGNIN");
+
+    // Always navigate to the login page unless it's after Google OAuth or email verification, as those routes require URL parameters.
+    if (error && pathName !== Pages.GOOGLE_AUTH && !pathName.startsWith(Pages.EMAIL_VERIFICATION)) appNavigate("SIGNIN");
+    if (error && pathName !== Pages.GOOGLE_AUTH && !pathName.startsWith(Pages.EMAIL_VERIFICATION)) appNavigate("SIGNIN");
     else if (data && pathName === "/") appNavigate("HOME");
   }, [error, data?.data]);
 
   return (
-    <Container sx={{ height: "100vh", width: "100vw", display: "block" }}>
+    <Stack sx={{ height: "100vh", width: "100vw", overflow: "hidden" }}>
       <Header />
-
-      <Outlet />
-    </Container>
+      <Box sx={{ height: "100%", width: "100%" }}>
+        <Outlet />
+      </Box>
+    </Stack>
   );
 };
 

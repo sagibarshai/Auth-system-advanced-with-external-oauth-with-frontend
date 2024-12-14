@@ -19,21 +19,23 @@ export const theme = createTheme({
         },
       },
     },
-
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          padding: 0,
+          margin: 0,
+        },
+      },
+    },
     MuiFormControl: {
       styleOverrides: {
         root: ({ theme }) => ({
           background: "white",
-          display: "flex",
           boxShadow: "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "50%",
-          height: "auto",
-          padding: theme.spacing(3),
+          padding: theme.spacing(4),
+          gap: theme.spacing(2),
           borderRadius: "2%",
           margin: "auto",
-          gap: theme.spacing(2),
         }),
       },
     },

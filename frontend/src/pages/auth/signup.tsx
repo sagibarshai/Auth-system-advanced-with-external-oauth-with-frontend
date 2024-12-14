@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Box, Grid, FormControl } from "@mui/material";
+import { Typography, Box, Grid2, FormControl } from "@mui/material";
 
 import TextInput from "../../components/inputs/text";
 import PasswordInput from "../../components/inputs/password";
@@ -165,53 +165,56 @@ const SignupPage: React.FC = () => {
   };
 
   return (
-    <FormControl>
+    <FormControl sx={{ width: "500px", height: "auto", maxHeight: "90%", overflowY: "auto", display: "flex", alignItems: "center" }}>
+      {/* Title */}
       <Typography variant="h4" gutterBottom>
         Sign Up
       </Typography>
 
-      <Grid container spacing={2}>
-        {/* First Name */}
-        <Grid item xs={6}>
+      {/* First Name */}
+      <Grid2 container spacing={1} sx={{ width: "100%", height: "100%" }}>
+        <Grid2 size={6}>
           <TextInput stateProps={firstNameState} staticsProps={firstNameStatics} />
-        </Grid>
+        </Grid2>
 
         {/* Last Name */}
-        <Grid item xs={6}>
+        <Grid2 size={6}>
           <TextInput stateProps={lastNameState} staticsProps={lastNameStatics} />
-        </Grid>
+        </Grid2>
 
         {/* Email */}
-        <Grid item xs={6}>
+        <Grid2 size={6}>
           <TextInput stateProps={emailState} staticsProps={emailStatics} />
-        </Grid>
+        </Grid2>
+
         {/* Phone Number */}
-        <Grid item xs={6}>
+        <Grid2 size={6}>
           <TextInput stateProps={phoneNumberState} staticsProps={phoneNumberStatics} />
-        </Grid>
+        </Grid2>
 
         {/* Password */}
-        <Grid item xs={12}>
+        <Grid2 size={12}>
           <PasswordInput stateProps={passwordState} staticsProps={passwordStatics} />
-        </Grid>
+        </Grid2>
 
+        {/* Messages */}
         {success && success.length ? (
-          <Grid item xs={12}>
+          <Grid2 size={12}>
             <Success success={success} onClose={onCloseSuccess} />
-          </Grid>
+          </Grid2>
         ) : null}
         {info && info.length ? (
-          <Grid item xs={12}>
+          <Grid2 size={12}>
             <Info info={info} onClose={onCloseInfo} />
-          </Grid>
+          </Grid2>
         ) : null}
         {errors && errors.length ? (
-          <Grid item xs={12}>
+          <Grid2 size={12}>
             <ErrorAlert errors={errors} onClose={onCloseError} />
-          </Grid>
+          </Grid2>
         ) : null}
-
-        <Grid item xs={12}>
+        <Grid2 size={12}>
+          {/* Email verification button */}
           {signupRequest.data?.data ? (
             <AppButton
               text={`Resend email verification`}
@@ -223,10 +226,11 @@ const SignupPage: React.FC = () => {
               }
             />
           ) : (
+            // Signup button
             <AppButton onClick={signupRequest.fetchData} disabled={!isFormValid} text={"Sign Up"} loading={signupRequest.loading} />
           )}
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
 
       <GoogleButton />
       <AppButton variant="text" onClick={handleNavigateSignIn} text={`Already have an account? Sign in here`} disabled={false} />

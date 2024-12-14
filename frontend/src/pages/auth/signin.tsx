@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Typography, Box, Grid, FormControl } from "@mui/material";
+import { Typography, Box, Grid2, FormControl } from "@mui/material";
 
 import TextInput from "../../components/inputs/text";
 import PasswordInput from "../../components/inputs/password";
@@ -159,38 +159,40 @@ const SignInPage: React.FC = () => {
   };
 
   return (
-    <FormControl>
+    <FormControl sx={{ width: "500px", height: "auto", maxHeight: "90%", overflowY: "auto", display: "flex", alignItems: "center" }}>
       <Typography variant="h4" gutterBottom>
         Sign In
       </Typography>
-      <Grid container spacing={2}>
+      <Grid2 container spacing={1} sx={{ width: "100%", height: "100%" }}>
         {/* Email */}
-        <Grid item xs={12}>
+        <Grid2 size={12}>
           <TextInput stateProps={emailState} staticsProps={emailStatics} />
-        </Grid>
+        </Grid2>
 
         {/* Password */}
-        <Grid item xs={12}>
+        <Grid2 size={12}>
           <PasswordInput stateProps={passwordState} staticsProps={passwordStatics} />
-        </Grid>
+        </Grid2>
 
-        {/* Submit Button */}
+        {/* Messages  */}
         {success && success.length ? (
-          <Grid item xs={12}>
+          <Grid2 size={12}>
             <Success success={success} onClose={onCloseSuccess} />
-          </Grid>
+          </Grid2>
         ) : null}
         {info && info.length ? (
-          <Grid item xs={12}>
+          <Grid2 size={12}>
             <Info info={info} onClose={onCloseInfo} />
-          </Grid>
+          </Grid2>
         ) : null}
         {errors && errors.length ? (
-          <Grid item xs={12}>
+          <Grid2 size={12}>
             <ErrorAlert onClose={onCloseError} errors={errors} />
-          </Grid>
+          </Grid2>
         ) : null}
-        <Grid item xs={12}>
+
+        {/* Email verification button */}
+        <Grid2 size={12}>
           {unVerifyEmail ? (
             <AppButton
               text={`Resend email verification`}
@@ -200,12 +202,15 @@ const SignInPage: React.FC = () => {
             />
           ) : null}
 
+          {/* SignIn Button */}
           <AppButton onClick={signInRequest.fetchData} disabled={!isFormValid} text={"Sign In"} loading={signInRequest.loading} />
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
 
+      {/* Google Auth */}
       <GoogleButton />
 
+      {/* Navigate to signup */}
       <AppButton variant="text" onClick={handleNavigateSignUp} text={`Don't have an account? Sign up here`} disabled={false} />
     </FormControl>
   );
