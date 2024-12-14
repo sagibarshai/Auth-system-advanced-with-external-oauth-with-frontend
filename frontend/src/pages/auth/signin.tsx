@@ -101,13 +101,6 @@ const SignInPage: React.FC = () => {
     setUnVerifyEmail(null);
   }, [emailState.value]);
 
-  // set the first error from pageState only for once!
-  useEffect(() => {
-    if (pageState.errors) {
-      setErrors((prev) => (prev ? [...pageState.errors!, ...prev] : [...pageState.errors!]));
-    }
-  }, []);
-
   // set the errors from email verification and signin requests, override the pageState error
   useEffect(() => {
     let updatedErrors: CustomErrorMessage = [];
@@ -115,6 +108,13 @@ const SignInPage: React.FC = () => {
     if (resendEmailVerificationRequest.error) updatedErrors = [...updatedErrors, ...resendEmailVerificationRequest.error.customErrors];
     setErrors(updatedErrors);
   }, [signInRequest.error, resendEmailVerificationRequest.error]);
+
+  // set the first error from pageState only for once!
+  useEffect(() => {
+    if (pageState.errors) {
+      setErrors((prev) => (prev ? [...pageState.errors!, ...prev] : [...pageState.errors!]));
+    }
+  }, []);
 
   // update the info from the email verification
   useEffect(() => {
