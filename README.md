@@ -55,6 +55,7 @@ EMAIL_ACCESS_KEY= # your_email_app_token (Learn how to generate it by following 
 JWT_KEY= # value (Can be generated using `crypto.randomUUID()` for a unique string)
 
 COOKIE_SECRET= # value (Should be a random string, used for securing cookies)
+
 ---
 
 
