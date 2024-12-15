@@ -4,7 +4,7 @@ This project provides a secure and well-structured application for user authenti
 
 ---
 
-**Key Features:**
+**Core Features and Technologies:**
 
 1.**Frontend:**
 
@@ -128,7 +128,7 @@ Dockerfiles and docker-compose.yml for easy deployment
 ---
 
 
-#  Started:
+#  Getting Started:
 Prerequisites
 
 Docker, Git
