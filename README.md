@@ -38,92 +38,93 @@ This project provides a secure and well-structured application for user authenti
 
 # User Authentication:
 
-1. Signup and Signin with Email: Users can sign up and sign in using their email, password, and extra fields. Email verification is required for account activation.
+* Signup and Signin with Email: Users can sign up and sign in using their email, password, and extra fields. Email verification is required for account activation.
 
-2. Signup and Signin with Google: Users can sign up and sign in using their Google account on a single endpoint. No email verification is required for Google signups.
+* Signup and Signin with Google: Users can sign up and sign in using their Google account on a single endpoint. No email verification is required for Google signups.
 
-3. Signout: Signing out deletes the authentication token cookie.
+* Signout: Signing out deletes the authentication token cookie.
 
-4. Email Verification: Required for email-based signups to activate accounts.
+* Email Verification: Required for email-based signups to activate accounts.
 
-5. Resend Email Verification: Users can request a verification email again, with configurable retry limits.
+* Resend Email Verification: Users can request a verification email again, with configurable retry limits.
 
 ---
 
 # Security:
 
-Strong password hashing
+* Strong password hashing
 
-Email verification for increased security
+* Email verification for increased security
 
-Auto refresh tokens for long-lived sessions
+* Auto refresh tokens mechanism
 
-Cookie-based JWT authentication for secure token storage
+* Cookie-based JWT authentication for secure token storage
 
 ---
 
 # Middlewares:
 
-currentUser: return the currently logged-in user or null
+* currentUser: return the currently logged-in user or null
 
-requireAuth: Protects routes that require authentication
+* requireAuth: Protects routes that require authentication
 
-notFoundRoute: Handles requests for non-existent routes
+* notFoundRoute: Handles requests for non-existent routes
 
-errorHandler: Provides centralized error handling for a robust and well-structured application design.
+* errorHandler: Provides centralized error handling for a robust and well-structured application design.
 
 ---
 
 # Error Handling:
 
-Centralized Error Handling Middleware: Implement a middleware to handle errors gracefully and provide normalized errors to the client.
+* Centralized Error Handling Middleware: Implement a middleware to handle errors gracefully and provide normalized errors to the client.
 
-Custom Error Types: Define custom error types for different error scenarios (e.g., validation errors, authentication errors, database errors) to provide more specific error messages.
+* Custom Error Types: Define custom error types for different error scenarios (e.g., validation errors, authentication errors, database errors) to provide more specific error messages.
 
-Error Logging: Log errors to a file or a logging service to aid in debugging and monitoring.
+* Error Logging: Log errors to a file or a logging service to aid in debugging and monitoring.
 
 ---
 # Strong Configuration:
 
-Backend configuration
+* Backend configuration
 
-Database Configuration:
+* Database Configuration:
 
-JWT Configuration
+* JWT Configuration
 
-Cookie Configuration
+* Cookie Configuration
 
-SMTP server settings (host, port, username, password)
+* Email Configuration
 
-Google Configuration
+* Google Configuration
 
 
 ---
 
 # Structure:
 
-Clean and organized codebase using TypeScript
+* Clean and organized codebase using TypeScript
 
-Modular design for easier maintenance
+* Modular design for easier maintenance
 
-Environment variables for sensitive data (*.env)
+* Environment variables for sensitive data (*.env), loaded and served from a centralized config file for better maintainability.
 
 ---
 
 # Database:
 
-Uses PostgreSQL for user and verification data:
-two tables: 
+* Uses PostgreSQL for user and verification data:
 
-**Users Table**
+includes two tables: 
 
-**Email_Verifications Table**
+1 .**Users Table**
+
+2. **Email_Verifications Table**
 
 ---
 
 # Dockerization:
 
-Dockerfiles and docker-compose.yml for easy deployment
+* Dockerfiles and docker-compose.yml for easy development
 
 ---
 
@@ -131,16 +132,18 @@ Dockerfiles and docker-compose.yml for easy deployment
 #  Getting Started:
 Prerequisites
 
-Docker, Git
+Docker, Git, Node
 
 **Environment Setup**
-To run this project, you only need to create a single .env file at the root level of the project with the following environment variables.
 
 1. **Clone the Repository**
 git clone https://github.com/sagibarshai/Auth-System.git
 cd Auth-System
 
-2.**Create the .env File**
+2. **Install Dependencies:**
+cd ./frontend && npm install && cd ../backend && npm install
+
+3.**Create the .env File**
 Inside the root directory, create a file named .env and add the following environment variables:
 
 
@@ -157,29 +160,23 @@ GOOGLE_CLIENT_ID=<value> (Learn how to generate your Google Client ID here: [How
 GOOGLE_CLIENT_SECRET=<value> (Learn how to generate your Google Client Secret here: [How to generate Google OAuth Client ID and Client Secret](https://www.youtube.com/watch?v=ex3FW_40izU))
 EMAIL_ADDRESS=<value>
 EMAIL_ACCESS_KEY=<value> (Learn how to generate it by following this guide: [How to Create an App Password in Gmail](https://youtu.be/YKn6iRlYd_Q?feature=shared))
-JWT_KEY=<value>
-COOKIE_SECRET=<value>
+JWT_KEY=<value> (Can be generated using `crypto.randomUUID()` for a unique string)
+COOKIE_SECRET=<value> (Should be a random string, used for securing cookies)
 
 
 
-
-3. **Running the Project:**
+4. **Running the Project:**
    
-To start the project with Docker Compose, run the following command:
-
-**docker-compose up --build**
-
+To start the project run : **docker-compose up --build**
 This will build the services and start them using the environment variables defined in .env file in the root directory.
 
-4. **Stopping the Project**
+5. **Stopping the Project**
 
-To stop the project, run:
-
-**docker-compose down**
+To stop the project, run: **docker-compose down**
 
 ---
 
-# End Points:
+# Backend End Points:
 
 **signup** - /api/auth/signup, method = post 
 
