@@ -44,7 +44,7 @@ GOOGLE_CLIENT_SECRET= # your_google_client_secret  (Learn how to generate your G
 
 EMAIL_ADDRESS= # your_email_address
 
-EMAIL_ACCESS_KEY= your_email_app_token (Learn how to generate it by following this guide: [How to Create an App Password in Gmail](https://youtu.be/YKn6iRlYd_Q?feature=shared))
+EMAIL_ACCESS_KEY= # your_email_app_token (Learn how to generate it by following this guide: [How to Create an App Password in Gmail](https://youtu.be/YKn6iRlYd_Q?feature=shared))
 
 JWT_KEY= # value (Can be generated using `crypto.randomUUID()` for a unique string)
 
