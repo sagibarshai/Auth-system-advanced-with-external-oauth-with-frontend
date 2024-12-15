@@ -125,6 +125,7 @@ To stop the project, run: **docker-compose down**
 **verify email** - /api/emailVerification/:id/:token, method = get
 
 **resend email verification** - /api/auth/emailVerification/resend, method = post
+
 ---
 
 # Security:
