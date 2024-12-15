@@ -36,19 +36,19 @@ POSTGRES_DB=postgres  # Default for initialization, can change later
 
 POSTGRES_HOST=db  # Default for initialization, can change later
 
-BACKEND_PORT= <value>
+BACKEND_PORT= # value (4000 is recommended)
 
-GOOGLE_CLIENT_ID= <value> (Learn how to generate your Google Client ID here: [How to create Google OAuth Credentials](https://www.youtube.com/watch?v=v8j2lvjCAZc))
+GOOGLE_CLIENT_ID= # your_google_client_id (Learn how to generate your Google Client ID here: [How to create Google OAuth Credentials](https://www.youtube.com/watch?v=v8j2lvjCAZc))
 
-GOOGLE_CLIENT_SECRET= <value> (Learn how to generate your Google Client Secret here: [How to generate Google OAuth Client ID and Client Secret](https://www.youtube.com/watch?v=ex3FW_40izU))
+GOOGLE_CLIENT_SECRET= # your_google_client_secret  (Learn how to generate your Google Client Secret here: [How to generate Google OAuth Client ID and Client Secret](https://www.youtube.com/watch?v=ex3FW_40izU))
 
-EMAIL_ADDRESS= <value>
+EMAIL_ADDRESS= # your_email_address
 
-EMAIL_ACCESS_KEY= <value> (Learn how to generate it by following this guide: [How to Create an App Password in Gmail](https://youtu.be/YKn6iRlYd_Q?feature=shared))
+EMAIL_ACCESS_KEY= your_email_app_token (Learn how to generate it by following this guide: [How to Create an App Password in Gmail](https://youtu.be/YKn6iRlYd_Q?feature=shared))
 
-JWT_KEY= <value> (Can be generated using `crypto.randomUUID()` for a unique string)
+JWT_KEY= # value (Can be generated using `crypto.randomUUID()` for a unique string)
 
-COOKIE_SECRET= <value> (Should be a random string, used for securing cookies)
+COOKIE_SECRET= # value (Should be a random string, used for securing cookies)
 
 
 
