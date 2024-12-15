@@ -20,15 +20,15 @@ Prerequisites: **Docker, Git, Node**
 
 2. # Install Dependencies:
 
-cd ./frontend && npm install && cd ../backend && npm install
+**cd ./frontend && npm install && cd ../backend && npm install**
 
 ---
 
 
 
 3. # Create the .env File
-Inside the root directory, create a file named .env and add the following environment variables:
-
+   
+**Inside the root directory, create a file named .env and add the following environment variables:**
 
 POSTGRES_USER=postgres  # Default for initialization, can change later
 
