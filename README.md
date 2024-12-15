@@ -53,7 +53,7 @@ GOOGLE_CLIENT_SECRET=<your_google_client_secret>  # Learn how to generate your G
 
 **Ensure that the Google OAuth callback URL is correctly configured.
 The callback URL must match the following format:
-http://localhost:<port>/api/google/callback
+http://localhost:<port>/api/auth/google/callback
 Where <port> corresponds to the BACKEND_PORT specified in your .env file.
 Make sure the URL in the Google Developer Console matches this for proper authentication.**
 
