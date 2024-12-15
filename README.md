@@ -16,7 +16,7 @@ Prerequisites: **Docker, Git, Node**
 
 * cd Auth-system-advanced-with-external-oauth-with-frontend
 
-3. **Install Dependencies:**
+2. **Install Dependencies:**
 
 cd ./frontend && npm install && cd ../backend && npm install
 
@@ -25,19 +25,29 @@ Inside the root directory, create a file named .env and add the following enviro
 
 
 POSTGRES_USER=postgres  # Default for initialization, can change later
+
 POSTGRES_PASSWORD=postgres  # Default for initialization, can change later
+
 POSTGRES_DATABASE=postgres  # Default for initialization, can change later
+
 POSTGRES_PORT=5432  # Default for initialization, can change later
+
 POSTGRES_DB=postgres  # Default for initialization, can change later
+
 POSTGRES_HOST=db  # Default for initialization, can change later
 
 BACKEND_PORT=<value>
 
 GOOGLE_CLIENT_ID=<value> (Learn how to generate your Google Client ID here: [How to create Google OAuth Credentials](https://www.youtube.com/watch?v=v8j2lvjCAZc))
+
 GOOGLE_CLIENT_SECRET=<value> (Learn how to generate your Google Client Secret here: [How to generate Google OAuth Client ID and Client Secret](https://www.youtube.com/watch?v=ex3FW_40izU))
+
 EMAIL_ADDRESS=<value>
+
 EMAIL_ACCESS_KEY=<value> (Learn how to generate it by following this guide: [How to Create an App Password in Gmail](https://youtu.be/YKn6iRlYd_Q?feature=shared))
+
 JWT_KEY=<value> (Can be generated using `crypto.randomUUID()` for a unique string)
+
 COOKIE_SECRET=<value> (Should be a random string, used for securing cookies)
 
 
