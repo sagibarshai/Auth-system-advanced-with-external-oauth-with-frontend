@@ -189,11 +189,9 @@ To stop the project, run: **docker-compose down**
 includes two tables: 
 
 
-
-1 .**Users Table**
-
-2. **Email_Verifications Table**
-
+1. **Users Table**
+2. **Email Verifications Table**
+   
 ---
 
 # Dockerization:
