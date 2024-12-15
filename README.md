@@ -10,15 +10,23 @@ Prerequisites: **Docker, Git, Node**
 
 **Environment Setup**
 
+
+
 1. **Clone the Repository**
 
 * git clone https://github.com/sagibarshai/Auth-system-advanced-with-external-oauth-with-frontend.git
 
 * cd Auth-system-advanced-with-external-oauth-with-frontend
 
+
+
+
 2. **Install Dependencies:**
 
 cd ./frontend && npm install && cd ../backend && npm install
+
+
+
 
 3.**Create the .env File**
 Inside the root directory, create a file named .env and add the following environment variables:
