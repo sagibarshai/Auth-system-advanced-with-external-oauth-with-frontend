@@ -9,7 +9,7 @@ This project provides a secure and well-structured application for user authenti
 Prerequisites: **Docker, Git, Node**
 ---
 
-1. **Clone the Repository**
+1. # Clone the Repository
 
 * git clone https://github.com/sagibarshai/Auth-system-advanced-with-external-oauth-with-frontend.git
 
@@ -18,14 +18,15 @@ Prerequisites: **Docker, Git, Node**
 
 
 
-2. **Install Dependencies:**
+2. # Install Dependencies:
 
 cd ./frontend && npm install && cd ../backend && npm install
+
 ---
 
 
 
-3.**Create the .env File**
+3. # Create the .env File
 Inside the root directory, create a file named .env and add the following environment variables:
 
 
@@ -57,20 +58,20 @@ COOKIE_SECRET= # value (Should be a random string, used for securing cookies)
 ---
 
 
-4. **Running the Project:**
+4. # Running the Project:
    
 To start the project run : **docker-compose up --build**
 This will build the services and start them using the environment variables defined in .env file in the root directory.
 
-5. **Stopping the Project**
+5. # Stopping the Project
 
 To stop the project, run: **docker-compose down**
 
 ---
 
-**Core Features and Technologies:**
+# Core Features and Technologies:
 
-1.**Frontend:**
+1. # Frontend:
 
 - **Technologies:** React, TypeScript, Material-UI, Redux, React Router, React Hooks.
 
@@ -84,7 +85,7 @@ To stop the project, run: **docker-compose down**
 * Aligned types with the backend to ensure consistency between client and server.
 ---
 
-2. **Backend**
+2. # Backend
 
 - **Technologies:** Node.js, Express, TypeScript, Postgres
 
