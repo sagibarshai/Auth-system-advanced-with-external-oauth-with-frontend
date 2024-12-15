@@ -8,9 +8,9 @@ This project provides a secure and well-structured application for user authenti
 
 1.**Frontend:**
 
-- Technologies: React, TypeScript, Material-UI, Redux, React Router, React Hooks.
+- **Technologies:** React, TypeScript, Material-UI, Redux, React Router, React Hooks.
 
-- Key Features:
+- **Key Features:**
 * Signup and Signin Pages.
 * Custom hooks for managing requests, inputs, and more.
 * Modern UI built with Material-UI.
@@ -22,9 +22,9 @@ This project provides a secure and well-structured application for user authenti
 
 2. **Backend**
 
-- Technologies: Node.js, Express, TypeScript, Postgres
+- **Technologies:** Node.js, Express, TypeScript, Postgres
 
-- Key Features:
+- **Key Features:**
 * JWT-based authentication with refresh tokens.
 * Secure cookie storage for tokens.
 * Email verification and resend functionality with configurable retry limits.
@@ -143,8 +143,6 @@ cd Auth-System
 2.**Create the .env File**
 Inside the root directory, create a file named .env and add the following environment variables:
 
-BACKEND_PORT=<value>
-
 
 POSTGRES_USER=postgres  # Default for initialization, can change later
 POSTGRES_PASSWORD=postgres  # Default for initialization, can change later
@@ -153,10 +151,12 @@ POSTGRES_PORT=5432  # Default for initialization, can change later
 POSTGRES_DB=postgres  # Default for initialization, can change later
 POSTGRES_HOST=db  # Default for initialization, can change later
 
-GOOGLE_CLIENT_ID=<value>
-GOOGLE_CLIENT_SECRET=<value>
+BACKEND_PORT=<value>
+
+GOOGLE_CLIENT_ID=<value> (Learn how to generate your Google Client ID here: [How to create Google OAuth Credentials](https://www.youtube.com/watch?v=v8j2lvjCAZc))
+GOOGLE_CLIENT_SECRET=<value> (Learn how to generate your Google Client Secret here: [How to generate Google OAuth Client ID and Client Secret](https://www.youtube.com/watch?v=ex3FW_40izU))
 EMAIL_ADDRESS=<value>
-EMAIL_ACCESS_KEY=<value>
+EMAIL_ACCESS_KEY=<value> (Learn how to generate it by following this guide: [How to Create an App Password in Gmail](https://youtu.be/YKn6iRlYd_Q?feature=shared))
 JWT_KEY=<value>
 COOKIE_SECRET=<value>
 
