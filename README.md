@@ -6,9 +6,7 @@ This project provides a secure and well-structured application for user authenti
 
 
 #  Getting Started:
-Prerequisites
-
-Docker, Git, Node
+Prerequisites: **Docker, Git, Node**
 
 **Environment Setup**
 
