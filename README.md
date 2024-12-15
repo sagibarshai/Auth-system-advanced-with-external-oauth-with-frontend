@@ -17,14 +17,14 @@ Prerequisites: **Docker, Git, Node**
 * git clone https://github.com/sagibarshai/Auth-system-advanced-with-external-oauth-with-frontend.git
 
 * cd Auth-system-advanced-with-external-oauth-with-frontend
-
+---
 
 
 
 2. **Install Dependencies:**
 
 cd ./frontend && npm install && cd ../backend && npm install
-
+---
 
 
 
@@ -57,7 +57,7 @@ EMAIL_ACCESS_KEY= # your_email_app_token (Learn how to generate it by following 
 JWT_KEY= # value (Can be generated using `crypto.randomUUID()` for a unique string)
 
 COOKIE_SECRET= # value (Should be a random string, used for securing cookies)
-
+---
 
 
 4. **Running the Project:**
@@ -85,7 +85,7 @@ To stop the project, run: **docker-compose down**
 * Navigation using React Router.
 * Comprehensive error handling and user feedback messages.
 * Aligned types with the backend to ensure consistency between client and server.
-
+---
 
 2. **Backend**
 
@@ -98,9 +98,6 @@ To stop the project, run: **docker-compose down**
 * Google OAuth integration for signup/signin.
 * Database configuration using PostgreSQL.
 * Environment variable management for configuration
-
-
-
 ---
 
 # User Authentication:
@@ -114,89 +111,7 @@ To stop the project, run: **docker-compose down**
 * Email Verification: Required for email-based signups to activate accounts.
 
 * Resend Email Verification: Users can request a verification email again, with configurable retry limits.
-
 ---
-
-# Security:
-
-* Strong password hashing
-
-* Email verification for increased security
-
-* Auto refresh tokens mechanism
-
-* Cookie-based JWT authentication for secure token storage
-
----
-
-# Middlewares:
-
-* currentUser: return the currently logged-in user or null
-
-* requireAuth: Protects routes that require authentication
-
-* notFoundRoute: Handles requests for non-existent routes
-
-* errorHandler: Provides centralized error handling for a robust and well-structured application design.
-
----
-
-# Error Handling:
-
-* Centralized Error Handling Middleware: Implement a middleware to handle errors gracefully and provide normalized errors to the client.
-
-* Custom Error Types: Define custom error types for different error scenarios (e.g., validation errors, authentication errors, database errors) to provide more specific error messages.
-
-* Error Logging: Log errors to a file or a logging service to aid in debugging and monitoring.
-
----
-# Strong Configuration:
-
-* Backend configuration
-
-* Database Configuration:
-
-* JWT Configuration
-
-* Cookie Configuration
-
-* Email Configuration
-
-* Google Configuration
-
-
----
-
-# Structure:
-
-* Clean and organized codebase using TypeScript
-
-* Modular design for easier maintenance
-
-* Environment variables for sensitive data (*.env), loaded and served from a centralized config file for better maintainability.
-
----
-
-# Database:
-
-* Uses PostgreSQL for user and verification data:
-
-includes two tables: 
-
-1 .**Users Table**
-
-2. **Email_Verifications Table**
-
----
-
-# Dockerization:
-
-* Dockerfiles and docker-compose.yml for easy development
-
----
-
-
-
 
 # Backend End Points:
 
@@ -211,3 +126,74 @@ includes two tables:
 **verify email** - /api/emailVerification/:id/:token, method = get
 
 **resend email verification** - /api/auth/emailVerification/resend, method = post
+---
+
+# Security:
+
+* Strong password hashing
+
+* Email verification for increased security
+
+* Auto refresh tokens mechanism
+
+* Cookie-based JWT authentication for secure token storage
+---
+
+# Middlewares:
+
+* currentUser: return the currently logged-in user or null
+
+* requireAuth: Protects routes that require authentication
+
+* notFoundRoute: Handles requests for non-existent routes
+
+* errorHandler: Provides centralized error handling for a robust and well-structured application design.
+---
+
+# Error Handling:
+
+* Centralized Error Handling Middleware: Implement a middleware to handle errors gracefully and provide normalized errors to the client.
+
+* Custom Error Types: Define custom error types for different error scenarios (e.g., validation errors, authentication errors, database errors) to provide more specific error messages.
+
+* Error Logging: Log errors to a file or a logging service to aid in debugging and monitoring.
+---
+# Strong Configuration:
+
+* Backend configuration
+
+* Database Configuration:
+
+* JWT Configuration
+
+* Cookie Configuration
+
+* Email Configuration
+
+* Google Configuration
+---
+
+# Structure:
+
+* Clean and organized codebase using TypeScript
+
+* Modular design for easier maintenance
+
+* Environment variables for sensitive data (*.env), loaded and served from a centralized config file for better maintainability.
+---
+
+# Database:
+
+* Uses PostgreSQL for user and verification data:
+
+includes two tables: 
+
+1 .**Users Table**
+
+2. **Email_Verifications Table**
+---
+
+# Dockerization:
+
+* Dockerfiles and docker-compose.yml for easy development
+---
