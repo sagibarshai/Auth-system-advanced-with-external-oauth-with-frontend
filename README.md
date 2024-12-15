@@ -13,7 +13,7 @@ Docker, Git, Node
 **Environment Setup**
 
 1. **Clone the Repository**
-git clone https://github.com/sagibarshai/Auth-System.git
+git clone [https://github.com/sagibarshai/Auth-System.git](https://github.com/sagibarshai/Auth-system-advanced-with-external-oauth-with-frontend.git)
 cd Auth-System
 
 2. **Install Dependencies:**
