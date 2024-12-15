@@ -2,6 +2,7 @@
 
 This project provides a secure and well-structured application for user authentication, featuring email verification, refresh tokens, and cookie-based JWT authentication. It's designed to be a solid foundation for building new projects with robust authentication features.
 
+---
 
 **Key Features:**
 
