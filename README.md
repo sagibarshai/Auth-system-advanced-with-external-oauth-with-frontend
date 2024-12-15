@@ -42,11 +42,21 @@ POSTGRES_DB=postgres  # Default for initialization, can change later
 
 POSTGRES_HOST=db  # Default for initialization, can change later
 
-BACKEND_PORT= # value (4000 is recommended)
+BACKEND_PORT= # value  (Default port (4000 recommended))
+# Ensure this port matches the one configured in your Google OAuth redirect URI.
+# The redirect URI in the Google Developer Console should point to this port for proper authentication.
 
-GOOGLE_CLIENT_ID= # your_google_client_id (Learn how to generate your Google Client ID here: [How to create Google OAuth Credentials](https://www.youtube.com/watch?v=v8j2lvjCAZc))
 
-GOOGLE_CLIENT_SECRET= # your_google_client_secret  (Learn how to generate your Google Client Secret here: [How to generate Google OAuth Client ID and Client Secret](https://www.youtube.com/watch?v=ex3FW_40izU))
+GOOGLE_CLIENT_ID=<your_google_client_id>  # Learn how to generate your Google Client ID here: [How to create Google OAuth Credentials](https://www.youtube.com/watch?v=v8j2lvjCAZc)
+
+GOOGLE_CLIENT_SECRET=<your_google_client_secret>  # Learn how to generate your Google Client Secret here: [How to generate Google OAuth Client ID and Client Secret](https://www.youtube.com/watch?v=ex3FW_40izU)
+
+# Ensure that the Google OAuth callback URL is correctly configured.
+# The callback URL must match the following format:
+# HTTP://localhost:<port>/api/google/callback
+# Where <port> corresponds to the BACKEND_PORT specified in your .env file.
+# Make sure the URL in the Google Developer Console matches this for proper authentication.
+
 
 EMAIL_ADDRESS= # your_email_address
 
