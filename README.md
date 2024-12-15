@@ -1,4 +1,4 @@
-# Robust Auth System with Database, Refresh Tokens Cookie-Based JWT Authentication and client side.
+# Robust Auth System with Database, Refresh Tokens Cookie-Based JWT Authentication and Client side.
 
 This project provides a secure and well-structured application for user authentication, featuring email verification, refresh tokens, and cookie-based JWT authentication. It's designed to be a solid foundation for building new projects with robust authentication features.
 
