@@ -130,7 +130,7 @@ To stop the project, run: **docker-compose down**
 
 **signout** - /api/auth/signout, method = post
 
-**auth with google(signin and signup)** - /api/auth/google, method = post
+**auth with google(signin and signup)** - /api/auth/google, method = get
 
 **verify email** - /api/emailVerification/:id/:token, method = get
 
