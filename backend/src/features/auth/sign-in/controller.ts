@@ -33,7 +33,7 @@ export const signInController = async (req: SignUpRequest, res: Response, next: 
 
     if (!isPasswordsMatch) return next(BadRequestError([{ message: "Wrong Credentials" }]));
 
-    if (!storedUser.isVerified) return next(ForbiddenError([{ message: "Email not verify, please check user email" }]));
+    if (!storedUser.isVerified) return next(ForbiddenError([{ message: "Email not verified" }]));
 
     const safeUser = await UpdateLoginModel(req.body.email);
 

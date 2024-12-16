@@ -26,7 +26,6 @@ router.get("/google/callback", async (req: Request, res: Response, next: NextFun
       const errorsMsg = formatError(err);
       return res.status(err.statusCode || 400).redirect(`${config.GOOGLE_OAUTH.GOOGLE_FAILURE_REDIRECT}?errors=${errorsMsg}`);
     }
-
     res.status(200).redirect(config.GOOGLE_OAUTH.GOOGLE_SUCCESS_REDIRECT);
   })(req, res, next);
 });
