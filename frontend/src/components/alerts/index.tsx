@@ -1,26 +1,27 @@
-import { Alert, AlertTitle, Container } from "@mui/material";
-import { CustomErrorMessage } from "../../../api/backend/auth/types";
+import { Alert, AlertProps, AlertTitle, Container } from "@mui/material";
+import { CustomErrorMessage } from "../../api/backend/auth/types";
 
 interface Props {
-  errors: string[] | CustomErrorMessage | null;
+  messages: string[] | CustomErrorMessage | null;
   onClose: (index: number) => void;
+  severity: AlertProps["severity"];
 }
 
-const ErrorAlert: React.FC<Props> = ({ errors, onClose }) => {
-  if (!errors) return null;
+const AppAlert: React.FC<Props> = ({ messages, severity, onClose }) => {
+  if (!messages) return null;
 
   return (
     <Container disableGutters sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-      {errors.map((e, i) => {
+      {messages.map((e, i) => {
         if (typeof e === "string")
           return (
-            <Alert onClose={() => onClose(i)} severity="error">
+            <Alert onClose={() => onClose(i)} severity={severity}>
               <AlertTitle>{e}</AlertTitle>
             </Alert>
           );
         else
           return (
-            <Alert onClose={() => onClose(i)} severity="error">
+            <Alert onClose={() => onClose(i)} severity={severity}>
               <AlertTitle>
                 {e.field ? (
                   <>
@@ -36,4 +37,4 @@ const ErrorAlert: React.FC<Props> = ({ errors, onClose }) => {
   );
 };
 
-export default ErrorAlert;
+export default AppAlert;

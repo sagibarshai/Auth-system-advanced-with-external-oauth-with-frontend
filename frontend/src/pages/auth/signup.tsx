@@ -11,16 +11,14 @@ import { AuthEndPoints } from "../../api/backend/auth/endpoints";
 
 import TextInput from "../../components/inputs/text";
 import PasswordInput from "../../components/inputs/password";
-import ErrorAlert from "../../components/alerts/errors";
 import AppButton from "../../components/buttons";
-import Info from "../../components/alerts/info";
-import Success from "../../components/alerts/success";
 import GoogleButton from "../../components/buttons/google";
 
 import { emailRegex, onlyNumbersRegex, phoneRegex, strongPasswordRegex } from "../../utils/regex";
 
 import { Props as InputProps } from "../../components/inputs/text";
 import { ApiResponseJson, CustomErrorMessage, ResendEmailVerification, SafeUser } from "../../api/backend/auth/types";
+import AppAlert from "../../components/alerts";
 
 const SignupPage: React.FC = () => {
   const { appNavigate } = useAppRouter();
@@ -133,7 +131,11 @@ const SignupPage: React.FC = () => {
   useEffect(() => {
     let updatedInfo: string[] = [];
     if (resendEmailVerificationRequest.data?.data) {
-      updatedInfo = [`${resendEmailVerificationRequest.data.message} (${resendEmailVerificationRequest?.data.data.remainAttempts} Attempts Remain)`];
+      updatedInfo = [
+        `${resendEmailVerificationRequest.data.message}, (${
+          resendEmailVerificationRequest.data.data?.remainAttempts === 0 ? "No" : resendEmailVerificationRequest.data.data?.remainAttempts
+        } retries left)`,
+      ];
     }
     setInfo(updatedInfo);
   }, [resendEmailVerificationRequest.data]);
@@ -148,7 +150,10 @@ const SignupPage: React.FC = () => {
 
   // set the success message after successfully signup
   useEffect(() => {
-    if (signupRequest.data) setSuccess([`You sign up successfully, Check you email for email verification link`]);
+    if (signupRequest.data)
+      setSuccess([
+        `${signupRequest.data.data?.email} You've signed up successfully! Please check your inbox for a verification link to activate your account.`,
+      ]);
   }, [signupRequest.data]);
 
   // handlers
@@ -204,17 +209,17 @@ const SignupPage: React.FC = () => {
         {/* Messages */}
         {success && success.length ? (
           <Grid2 size={12}>
-            <Success success={success} onClose={(index) => onCloseMessage("success", index)} />
+            <AppAlert severity="success" messages={success} onClose={(index) => onCloseMessage("error", index)} />
           </Grid2>
         ) : null}
         {info && info.length ? (
           <Grid2 size={12}>
-            <Info info={info} onClose={(index) => onCloseMessage("info", index)} />
+            <AppAlert severity="info" messages={info} onClose={(index) => onCloseMessage("error", index)} />
           </Grid2>
         ) : null}
         {errors && errors.length ? (
           <Grid2 size={12}>
-            <ErrorAlert errors={errors} onClose={(index) => onCloseMessage("error", index)} />
+            <AppAlert severity="error" messages={errors} onClose={(index) => onCloseMessage("error", index)} />
           </Grid2>
         ) : null}
         <Grid2 size={12}>

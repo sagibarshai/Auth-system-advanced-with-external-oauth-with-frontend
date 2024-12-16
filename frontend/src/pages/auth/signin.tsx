@@ -8,12 +8,10 @@ import { useAppRouter } from "../../hooks/router";
 import { setUser } from "../../redux/features/user";
 import { useAppDispatch } from "../../hooks/redux";
 
-import ErrorAlert from "../../components/alerts/errors";
 import AppButton from "../../components/buttons";
 import TextInput from "../../components/inputs/text";
 import PasswordInput from "../../components/inputs/password";
-import Info from "../../components/alerts/info";
-import Success from "../../components/alerts/success";
+
 import GoogleButton from "../../components/buttons/google";
 
 import { emailRegex, strongPasswordRegex } from "../../utils/regex";
@@ -23,6 +21,7 @@ import { AuthEndPoints } from "../../api/backend/auth/endpoints";
 
 import { Props as InputProps } from "../../components/inputs/text";
 import { ApiResponseJson, CustomErrorMessage, ResendEmailVerification, SafeUser } from "../../api/backend/auth/types";
+import AppAlert from "../../components/alerts";
 
 const SignInPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -121,7 +120,9 @@ const SignInPage: React.FC = () => {
     let updatedInfo: string[] = [];
     if (resendEmailVerificationRequest.data)
       updatedInfo = [
-        `${resendEmailVerificationRequest.data.message}, You have ${resendEmailVerificationRequest.data.data?.remainAttempts} remain attempt`,
+        `${resendEmailVerificationRequest.data.message}, (${
+          resendEmailVerificationRequest.data.data?.remainAttempts === 0 ? "No" : resendEmailVerificationRequest.data.data?.remainAttempts
+        } retries left)`,
       ];
     setInfo(updatedInfo);
   }, [resendEmailVerificationRequest.data]);
@@ -180,17 +181,17 @@ const SignInPage: React.FC = () => {
         {/* Messages  */}
         {success && success.length ? (
           <Grid2 size={12}>
-            <Success success={success} onClose={(index) => onCloseMessage("success", index)} />
+            <AppAlert severity="success" messages={success} onClose={(index) => onCloseMessage("error", index)} />
           </Grid2>
         ) : null}
         {info && info.length ? (
           <Grid2 size={12}>
-            <Info info={info} onClose={(index) => onCloseMessage("info", index)} />
+            <AppAlert severity="info" messages={info} onClose={(index) => onCloseMessage("error", index)} />
           </Grid2>
         ) : null}
         {errors && errors.length ? (
           <Grid2 size={12}>
-            <ErrorAlert onClose={(index) => onCloseMessage("error", index)} errors={errors} />
+            <AppAlert severity="error" messages={errors} onClose={(index) => onCloseMessage("error", index)} />
           </Grid2>
         ) : null}
 

@@ -56,7 +56,7 @@ export const resentEmailVerificationController = async (req: ResendEmailVerifica
     if (!emailVerification || !emailVerification.isSent) return next(InternalServerError([{ message: `Cannot send email to ${unsafeUser.email}` }]));
 
     const response: ApiResponseJson = {
-      message: `Email verification sent successfully to ${unsafeUser.email}`,
+      message: `Email verification successfully sent to ${unsafeUser.email}`,
       data: { remainAttempts: config.EMAIL_VERIFICATION.MAX_ATTEMPT - storedEmailVerification!.attempts },
     };
 
