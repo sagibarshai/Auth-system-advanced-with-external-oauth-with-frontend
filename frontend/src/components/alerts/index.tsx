@@ -15,13 +15,13 @@ const AppAlert: React.FC<Props> = ({ messages, severity, onClose }) => {
       {messages.map((e, i) => {
         if (typeof e === "string")
           return (
-            <Alert onClose={() => onClose(i)} severity={severity}>
+            <Alert onClose={() => onClose(i)} severity={severity} key={e + i}>
               <AlertTitle>{e}</AlertTitle>
             </Alert>
           );
         else
           return (
-            <Alert onClose={() => onClose(i)} severity={severity}>
+            <Alert onClose={() => onClose(i)} severity={severity} key={e.message + i}>
               <AlertTitle>
                 {e.field ? (
                   <>
