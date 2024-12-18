@@ -18,6 +18,6 @@ export const createUsersTableIfNotExists = async () => {
     );`);
     console.log(`Users table is ready!`);
   } catch (err) {
-    console.log("Cannot Create table Users: ", err);
+    console.log("Cannot create users table: ", err);
   }
 };

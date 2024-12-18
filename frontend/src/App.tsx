@@ -39,7 +39,6 @@ const App: React.FC = () => {
 
     // Always navigate to the signin page unless it's after Google OAuth or email verification, as those routes require URL parameters and they have their own navigation to signin with page state.
     if (error && pathName !== Pages.GOOGLE_AUTH && !pathName.startsWith(Pages.EMAIL_VERIFICATION)) appNavigate("SIGNIN");
-    if (error && pathName !== Pages.GOOGLE_AUTH && !pathName.startsWith(Pages.EMAIL_VERIFICATION)) appNavigate("SIGNIN");
     else if (data && pathName === "/") appNavigate("HOME");
   }, [error, data?.data]);
 
