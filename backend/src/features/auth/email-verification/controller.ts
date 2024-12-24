@@ -25,9 +25,15 @@ export const emailVerificationController = async (req: EmailVerificationRequest,
     const unsafeUser = await SelectUnsafeUserModel(Number(id));
     if (!unsafeUser) return next(BadRequestError([{ message: "User not exists", field: "id" }]));
 
-    if (token !== unsafeUser.verificationToken) return next(BadRequestError([{ message: "Invalid verification token" }]));
+    const emailVerification = await SelectEmailVerificationModel(unsafeUser.email);
 
+    if (!emailVerification) return next(InternalServerError());
+
+    if (token !== emailVerification.verificationToken) return next(BadRequestError([{ message: "Invalid verification token" }]));
+
+    if (emailVerification.expiredIn < new Date()) return next(BadRequestError([{ message: "Verification token expired" }]));
     await UpdateUserIsVerifyModel(Number(id));
+
     const response: ApiResponseJson = { message: "Account is successfully verified" };
 
     res.status(301).json(response);
@@ -51,7 +57,10 @@ export const resentEmailVerificationController = async (req: ResendEmailVerifica
       return next(BadRequestError([{ message: "User pass the maximum attempts of email verification ", field: "email" }]));
     }
 
-    const emailVerification = await sendEmailVerification({ id: unsafeUser.id, to: unsafeUser.email!, token: unsafeUser.verificationToken! });
+    const emailVerification = await sendEmailVerification({
+      id: unsafeUser.id,
+      to: unsafeUser.email!,
+    });
 
     if (!emailVerification || !emailVerification.isSent) return next(InternalServerError([{ message: `Cannot send email to ${unsafeUser.email}` }]));
 

@@ -12,7 +12,6 @@ export const createUsersTableIfNotExists = async () => {
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
         last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
         is_verified BOOLEAN DEFAULT FALSE NOT NULL,
-        verification_token VARCHAR(255),
         phone_number VARCHAR(15),
         provider VARCHAR(25)
     );`);

@@ -4,10 +4,12 @@ interface StoredEmailVerification {
   id: number;
   email: string;
   user_id: number;
+  verification_token: string;
   is_sent: boolean;
   created_at: Date;
   updated_at: Date;
   attempts: number;
+  expired_in: Date;
 }
 export interface ReturnedEmailVerification {
   id: number;
@@ -17,6 +19,8 @@ export interface ReturnedEmailVerification {
   createdAt: Date;
   updatedAt: Date;
   attempts: number;
+  verificationToken: string;
+  expiredIn: Date;
 }
 interface EmailVerificationPayload extends Omit<ReturnedEmailVerification, "id" | "createdAt" | "updatedAt" | "attempts"> {}
 
@@ -29,6 +33,8 @@ const storedEmailVerificationsToReturnedEmailVerifications = (emailVerification:
     attempts: emailVerification.attempts,
     updatedAt: emailVerification.updated_at,
     isSent: emailVerification.is_sent,
+    verificationToken: emailVerification.verification_token,
+    expiredIn: emailVerification.expired_in,
   };
 };
 
@@ -37,18 +43,28 @@ export const UpsertEmailVerificationModel = async (emailVerificationPayload: Ema
     const response = await pgClient.query(
       `
         INSERT INTO Email_Verifications
-        (email, user_id, is_sent, attempts)
+        (email, user_id, is_sent, attempts, verification_token, expired_in)
         VALUES 
-        ($1, $2, $3, 1)
+        ($1, $2, $3, 1, $5, $6)
         ON CONFLICT (email)
         DO UPDATE SET 
           updated_at = $4,
           is_sent = $3,
-          attempts = Email_Verifications.attempts + 1
+          attempts = Email_Verifications.attempts + 1,
+          verification_token = $5,
+          expired_in = $6
         RETURNING *;
       `,
-      [emailVerificationPayload.email, emailVerificationPayload.userId, emailVerificationPayload.isSent, new Date()]
+      [
+        emailVerificationPayload.email,
+        emailVerificationPayload.userId,
+        emailVerificationPayload.isSent,
+        new Date(),
+        emailVerificationPayload.verificationToken,
+        emailVerificationPayload.expiredIn,
+      ]
     );
+
     const storedEmailVerification = response.rows[0] as StoredEmailVerification;
 
     return storedEmailVerificationsToReturnedEmailVerifications(storedEmailVerification);
@@ -74,18 +90,17 @@ export const SelectEmailVerificationModel = async (email: string): Promise<Retur
   }
 };
 
-// this two model below is for future use
-
+// this two model below is for future use if needed
 export const NewEmailVerificationModel = async (emailVerificationPayload: EmailVerificationPayload): Promise<ReturnedEmailVerification> => {
   try {
     const response = await pgClient.query(
       `INSERT INTO Email_Verifications
-        (email, user_id, is_sent, attempts)
+        (email, user_id, is_sent, attempts, verification_token)
         VALUES 
-        ($1,$2,$3,$4)
+        ($1,$2,$3,$4,$5)
         RETURNING *
          `,
-      [emailVerificationPayload.email, emailVerificationPayload.userId, emailVerificationPayload.isSent, 1]
+      [emailVerificationPayload.email, emailVerificationPayload.userId, emailVerificationPayload.isSent, 1, crypto.randomUUID()]
     );
 
     const storedEmailVerification = response.rows[0] as StoredEmailVerification;

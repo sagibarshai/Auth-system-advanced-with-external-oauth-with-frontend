@@ -42,15 +42,13 @@ export const googleStrategy = passport.use(
       const existingUser = await SelectUserModel(newUserPayload.email);
 
       if (existingUser) {
-        if (existingUser.provider === "app") {
-          const errorMessage = existingUser.isVerified
-            ? `User with email ${newUserPayload.email} already exists and cannot register with Google. Please sign in with email and password.`
-            : `User with email ${newUserPayload.email} already exists and cannot register with Google. Please verify your email and sign in with email and password.`;
-
+        if (!existingUser.isVerified) {
+          const errorMessage = `User with email ${newUserPayload.email} already exists and cannot register with Google. Please sign in with email and password.`;
           return done(BadRequestError([{ message: errorMessage, field: "email" }]));
         }
 
-        if (existingUser.provider === "google") {
+        // let user login even if he is register with email and password
+        if (existingUser.provider === "google" || existingUser.provider === "app") {
           // User exists and the provider is google, sign in and set token cookie
           const safeUser = await UpdateLoginModel(existingUser.email!);
           createTokenSetCookie(safeUser, req);

@@ -8,9 +8,11 @@ export const CreateEmailVerificationsTableIfNotExists = async () => {
                     id SERIAL PRIMARY KEY,
                     email VARCHAR(255) CHECK(LENGTH(email) > 6) UNIQUE NOT NULL,
                     user_id INT REFERENCES Users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                    verification_token VARCHAR(255),
                     is_sent BOOLEAN NOT NULL, 
                     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    expired_in TIMESTAMP NOT NULL,
                     attempts INT NOT NULL DEFAULT 0
                     ); 
                     `);

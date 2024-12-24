@@ -2,10 +2,10 @@ import nodemailer from "nodemailer";
 
 import { config } from "../../config";
 import { ReturnedEmailVerification, UpsertEmailVerificationModel } from "../../features/auth/models/email-verification";
+import { addMinutesFromNow } from "../dates";
 
 interface VerifyEmailProperties {
   to: string;
-  token: string;
   id: number;
   subject?: string;
   text?: string;
@@ -13,10 +13,11 @@ interface VerifyEmailProperties {
 export const sendEmailVerification = async ({
   id,
   to,
-  token,
   subject = "Account Verification",
-  text = "Click here to verify your account",
+  text = `Click here to verify your account, this link is valid for the next ${config.EMAIL_VERIFICATION.EXPIRED_IN} minutes`,
 }: VerifyEmailProperties): Promise<ReturnedEmailVerification | undefined> => {
+  const token = crypto.randomUUID();
+  const tokenExpiredIn = addMinutesFromNow(config.EMAIL_VERIFICATION.EXPIRED_IN);
   const mailOptions = {
     from: config.MAIL.FROM,
     to: to,
@@ -39,8 +40,8 @@ export const sendEmailVerification = async ({
 
   try {
     await transporter.sendMail(mailOptions);
-    return await UpsertEmailVerificationModel({ email: to, isSent: true, userId: id });
+    return await UpsertEmailVerificationModel({ email: to, isSent: true, userId: id, verificationToken: token, expiredIn: tokenExpiredIn });
   } catch (err) {
-    return await UpsertEmailVerificationModel({ email: to, isSent: false, userId: id });
+    return await UpsertEmailVerificationModel({ email: to, isSent: false, userId: id, verificationToken: token, expiredIn: tokenExpiredIn });
   }
 };

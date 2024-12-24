@@ -10,7 +10,6 @@ interface StoredUser {
   updated_at: Date;
   last_login: Date;
   is_verified: boolean;
-  verification_token?: string;
   phone_number?: string;
   provider: "app" | "google";
 }
@@ -26,11 +25,10 @@ export interface ReturnedStoredUser {
   updateAt: Date;
   lastLogin: Date;
   isVerified: boolean;
-  verificationToken?: string;
   provider: "app" | "google";
 }
 
-export interface SafeUser extends Omit<ReturnedStoredUser, "password" | "verificationToken"> {}
+export interface SafeUser extends Omit<ReturnedStoredUser, "password"> {}
 
 export interface NewUserPayload extends Omit<ReturnedStoredUser, "id" | "registerAt" | "updateAt" | "isVerified" | "lastLogin"> {}
 
@@ -49,22 +47,21 @@ const storedUserToReturnedStoredUser = (storedUser: StoredUser): SafeUser => {
   };
 };
 
-export const InsertUserModel = async (user: NewUserPayload): Promise<{ safeUser: SafeUser; verificationToken: StoredUser["verification_token"] }> => {
+export const InsertUserModel = async (user: NewUserPayload): Promise<{ safeUser: SafeUser }> => {
   try {
-    const randomToken = crypto.randomUUID();
     const response = await pgClient.query(
       `INSERT INTO Users 
-        (first_name, last_name, email, password, phone_number, verification_token, provider) 
+        (first_name, last_name, email, password, phone_number, provider) 
         VALUES
-         ($1, $2, $3, $4, $5, $6, $7)
+         ($1, $2, $3, $4, $5, $6)
          RETURNING *
          `,
-      [user.firstName, user.lastName, user.email, user.password, user.phoneNumber, randomToken, "app"]
+      [user.firstName, user.lastName, user.email, user.password, user.phoneNumber, "app"]
     );
 
     const storedUser = response.rows[0] as StoredUser;
 
-    return { safeUser: storedUserToReturnedStoredUser(storedUser), verificationToken: randomToken };
+    return { safeUser: storedUserToReturnedStoredUser(storedUser) };
   } catch (err) {
     throw err;
   }
@@ -121,7 +118,7 @@ export const SelectUnsafeUserModel = async (identifier: string | number): Promis
     if (!response.rows.length) return;
 
     const storedUser = response.rows[0] as StoredUser;
-    return { ...storedUserToReturnedStoredUser(storedUser), password: storedUser.password, verificationToken: storedUser.verification_token };
+    return { ...storedUserToReturnedStoredUser(storedUser), password: storedUser.password };
   } catch (err) {
     throw err;
   }
