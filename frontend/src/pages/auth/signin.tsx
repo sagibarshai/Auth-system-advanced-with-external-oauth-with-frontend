@@ -184,12 +184,12 @@ const SignInPage: React.FC = () => {
         {/* Messages  */}
         {success && success.length ? (
           <Grid2 size={12}>
-            <AppAlert severity="success" messages={success} onClose={(index) => onCloseMessage("error", index)} />
+            <AppAlert severity="success" messages={success} onClose={(index) => onCloseMessage("success", index)} />
           </Grid2>
         ) : null}
         {info && info.length ? (
           <Grid2 size={12}>
-            <AppAlert severity="info" messages={info} onClose={(index) => onCloseMessage("error", index)} />
+            <AppAlert severity="info" messages={info} onClose={(index) => onCloseMessage("info", index)} />
           </Grid2>
         ) : null}
         {errors && errors.length ? (
