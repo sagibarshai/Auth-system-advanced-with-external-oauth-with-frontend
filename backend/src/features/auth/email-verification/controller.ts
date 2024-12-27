@@ -31,10 +31,13 @@ export const emailVerificationController = async (req: EmailVerificationRequest,
 
     if (token !== emailVerification.verificationToken) return next(BadRequestError([{ message: "Invalid verification token" }]));
 
-    if (emailVerification.expiredIn < new Date()) return next(BadRequestError([{ message: "Verification token expired" }]));
+    if (emailVerification.expiredIn < new Date() && !unsafeUser.isVerified) return next(BadRequestError([{ message: "Verification token expired" }]));
     await UpdateUserIsVerifyModel(Number(id));
 
-    const response: ApiResponseJson = { message: "Account is successfully verified" };
+    const response: ApiResponseJson = {
+      message: unsafeUser.isVerified ? "User already verified" : "Account is successfully verified",
+      data: { email: unsafeUser.email },
+    };
 
     res.status(301).json(response);
   } catch (err) {

@@ -1,3 +1,8 @@
+export interface ApiResponseJson<T> {
+  message?: string;
+  data?: T;
+}
+
 export type CustomErrorMessage = {
   message: string;
   field?: string;
@@ -21,7 +26,4 @@ export interface ResendEmailVerification {
   remainAttempts: number;
 }
 
-export interface ApiResponseJson<T extends Record<string, any> = {}> {
-  message?: string;
-  data?: T;
-}
+export interface EmailVerificationResponse extends ApiResponseJson<{ email: string }> {}

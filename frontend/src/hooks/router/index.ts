@@ -3,14 +3,15 @@ import { NavigateOptions, useLocation, useNavigate, useParams } from "react-rout
 import { CustomErrorMessage } from "../../api/backend/auth/types";
 import { Pages } from "../../router";
 
-interface AppNavigateOptions extends NavigateOptions {
-  state: PageState;
+interface AppNavigateOptions<T> extends NavigateOptions {
+  state: PageState<T>;
 }
 
-interface PageState {
+interface PageState<T> {
   info?: string[];
   errors?: CustomErrorMessage;
   success?: string[];
+  data?: T;
 }
 
 export const useAppRouter = () => {
@@ -19,16 +20,17 @@ export const useAppRouter = () => {
   const params = useParams();
 
   // navigate
-  const appNavigate = useCallback((to: keyof typeof Pages, options?: AppNavigateOptions) => {
+  const appNavigate = useCallback(<T>(to: keyof typeof Pages, options?: AppNavigateOptions<T>) => {
     navigate(Pages[to], options);
   }, []);
 
   // get page state
-  const getPageState = useCallback((): PageState => {
+  const getPageState = useCallback(<T>(): PageState<T> => {
     return {
       errors: location?.state?.errors,
       info: location?.state?.info,
       success: location?.state?.success,
+      data: location?.state?.data as T,
     };
   }, []);
 

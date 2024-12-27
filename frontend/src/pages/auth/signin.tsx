@@ -20,7 +20,7 @@ import { backendAxiosInstance } from "../../api/backend/auth/backend-axios-insta
 import { AuthEndPoints } from "../../api/backend/auth/endpoints";
 
 import { Props as InputProps } from "../../components/inputs/text";
-import { ApiResponseJson, CustomErrorMessage, ResendEmailVerification, SafeUser } from "../../api/backend/auth/types";
+import { ApiResponseJson, CustomErrorMessage, EmailVerificationResponse, ResendEmailVerification, SafeUser } from "../../api/backend/auth/types";
 import AppAlert from "../../components/alerts";
 
 const SignInPage: React.FC = () => {
@@ -35,7 +35,7 @@ const SignInPage: React.FC = () => {
 
   // define email
   const [emailState, setEmail, emailStatics] = useInput<InputProps>({
-    stateProps: { isValid: false, showError: false, value: "" },
+    stateProps: { isValid: false, showError: false, value: "" }, // here please
     staticsProps: {
       type: "email",
       required: true,
@@ -63,8 +63,6 @@ const SignInPage: React.FC = () => {
   });
   const { isFormValid } = useForm({ inputs: [emailState, passwordState] });
 
-  const pageState = useMemo(() => getPageState(), []);
-
   // sign in request handler
   const signInRequest = useRequest<ApiResponseJson<SafeUser>, CustomErrorMessage>({
     axiosInstance: backendAxiosInstance,
@@ -88,6 +86,8 @@ const SignInPage: React.FC = () => {
     },
   });
 
+  const pageState = useMemo(() => getPageState<EmailVerificationResponse["data"]>(), []);
+  pageState.data;
   // set the UnVerifyEmail if signin request fails and return status code 403 (indicates that not verified)
   useEffect(() => {
     if (signInRequest.error?.errorResponse.response?.status === 403) {
@@ -108,12 +108,15 @@ const SignInPage: React.FC = () => {
     setErrors(updatedErrors);
   }, [signInRequest.error, resendEmailVerificationRequest.error]);
 
-  // set the first error from pageState only for once!
   useEffect(() => {
+    // set the first error from pageState only for once!
     if (pageState.errors) {
       setErrors((prev) => (prev ? [...pageState.errors!, ...prev] : [...pageState.errors!]));
     }
-  }, []);
+    // set the email from page state only for once
+    const email = pageState.data?.email;
+    if (email) setEmail((prev) => ({ ...prev, value: email }));
+  }, [pageState]);
 
   // update the info from the email verification
   useEffect(() => {
