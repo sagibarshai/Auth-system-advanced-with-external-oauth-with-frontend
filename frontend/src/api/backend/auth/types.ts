@@ -26,4 +26,6 @@ export interface ResendEmailVerification {
   remainAttempts: number;
 }
 
-export interface EmailVerificationResponse extends ApiResponseJson<{ email: string }> {}
+export interface EmailVerificationResponse {
+  email: string;
+}

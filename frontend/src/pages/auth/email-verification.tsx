@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { backendAxiosInstance } from "../../api/backend/auth/backend-axios-instance";
 import { useRequest } from "../../hooks/use-request";
 import { AuthEndPoints } from "../../api/backend/auth/endpoints";
-import { CustomErrorMessage, EmailVerificationResponse } from "../../api/backend/auth/types";
+import { ApiResponseJson, CustomErrorMessage, EmailVerificationResponse } from "../../api/backend/auth/types";
 import { useAppRouter } from "../../hooks/router";
 
 const EmailVerification: React.FC = () => {
@@ -11,7 +11,7 @@ const EmailVerification: React.FC = () => {
   const id = getRouteParams<string>("id");
   const token = getRouteParams<string>("token");
 
-  const { data, error, fetchData } = useRequest<EmailVerificationResponse, CustomErrorMessage>({
+  const { data, error, fetchData } = useRequest<ApiResponseJson<EmailVerificationResponse>, CustomErrorMessage>({
     axiosInstance: backendAxiosInstance,
     config: {
       url: `${AuthEndPoints.EMAIL_VERIFICATION}/${id}/${token}`,

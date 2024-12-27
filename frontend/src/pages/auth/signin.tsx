@@ -86,8 +86,8 @@ const SignInPage: React.FC = () => {
     },
   });
 
-  const pageState = useMemo(() => getPageState<EmailVerificationResponse["data"]>(), []);
-  pageState.data;
+  const pageState = useMemo(() => getPageState<EmailVerificationResponse>(), []);
+
   // set the UnVerifyEmail if signin request fails and return status code 403 (indicates that not verified)
   useEffect(() => {
     if (signInRequest.error?.errorResponse.response?.status === 403) {
