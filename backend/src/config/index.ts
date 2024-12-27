@@ -84,7 +84,7 @@ export const config = {
   EMAIL_VERIFICATION: {
     MAX_ATTEMPT: 3,
     VERIFICATION_URL: "http://localhost:5173/auth/email-verification", // change this to the url of the verification email route that you define on client side
-    EXPIRED_IN: 1, // in minutes
+    EXPIRED_IN: 3, // in minutes
   },
   GOOGLE_OAUTH: {
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,

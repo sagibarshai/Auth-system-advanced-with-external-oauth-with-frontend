@@ -164,3 +164,22 @@ export const UpdateUserIsVerifyModel = async (identifier: string | number): Prom
     throw err;
   }
 };
+
+export const DeleteUserModel = async (identifier: string | number): Promise<ReturnedStoredUser | undefined> => {
+  /** if identifier is number field = id, else field = email*/
+  const field = typeof identifier === "number" ? "id" : "email";
+
+  try {
+    const response = await pgClient.query(
+      `DELETE FROM Users  
+          WHERE ${field}=$1`,
+      [identifier]
+    );
+    if (!response.rows.length) return;
+
+    const storedUser = response.rows[0] as StoredUser;
+    return { ...storedUserToReturnedStoredUser(storedUser), password: storedUser.password };
+  } catch (err) {
+    throw err;
+  }
+};

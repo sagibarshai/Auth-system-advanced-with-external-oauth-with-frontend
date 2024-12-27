@@ -132,3 +132,20 @@ export const UpdateEmailVerificationModel = async (emailVerificationPayload: Ema
   }
 };
 //
+
+export const DeleteEmailVerificationModel = async (email: string): Promise<ReturnedEmailVerification | undefined> => {
+  try {
+    const response = await pgClient.query(
+      `
+          DELETE FROM Email_Verifications WHERE email=$1
+          `,
+      [email]
+    );
+    const storedEmailVerification = response.rows[0] as StoredEmailVerification | undefined;
+    if (!storedEmailVerification) return;
+
+    return storedEmailVerificationsToReturnedEmailVerifications(storedEmailVerification);
+  } catch (err) {
+    throw err;
+  }
+};
