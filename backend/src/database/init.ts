@@ -2,6 +2,7 @@ import { Pool } from "pg";
 import { createUsersTableIfNotExists } from "./tables/users";
 import { config } from "../config";
 import { CreateEmailVerificationsTableIfNotExists } from "./tables/email-verification";
+import { CreateResetPasswordTableIfNotExists } from "./tables/reset-password";
 
 export const pgClient = new Pool({
   user: config.POSTGRES.USER,
@@ -14,4 +15,5 @@ export const pgClient = new Pool({
 pgClient.on("connect", async () => {
   await createUsersTableIfNotExists();
   await CreateEmailVerificationsTableIfNotExists();
+  await CreateResetPasswordTableIfNotExists();
 });

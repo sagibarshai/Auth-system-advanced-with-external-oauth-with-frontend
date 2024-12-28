@@ -82,7 +82,7 @@ export const config = {
     SSL: false,
   },
   EMAIL_VERIFICATION: {
-    MAX_ATTEMPT: 3,
+    MAX_ATTEMPTS: 3,
     VERIFICATION_URL: "http://localhost:5173/auth/email-verification", // change this to the url of the verification email route that you define on client side
     EXPIRED_IN: 3, // in minutes
   },
@@ -92,5 +92,10 @@ export const config = {
     GOOGLE_CALLBACK_URL: `${baseURL}:${port}/api/auth/google/callback`, // do not change, it's match the route for google callback
     GOOGLE_SUCCESS_REDIRECT: "http://localhost:5173",
     GOOGLE_FAILURE_REDIRECT: "http://localhost:5173/auth/google",
+  },
+  RESET_PASSWORD: {
+    MAX_ATTEMPTS: 5,
+    EXPIRED_IN: 5, // in min
+    VERIFICATION_URL: "http://localhost:5173/auth/reset-password", // change this to the url of the reset password route that you define on client side
   },
 };

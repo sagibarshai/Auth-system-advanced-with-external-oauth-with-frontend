@@ -1,9 +1,9 @@
 import { pgClient } from "../init";
 
-export const CreateEmailVerificationsTableIfNotExists = async () => {
+export const CreateResetPasswordTableIfNotExists = async () => {
   try {
     await pgClient.query(`
-                    CREATE TABLE IF NOT EXISTS Email_Verifications
+                    CREATE TABLE IF NOT EXISTS Reset_Password
                     (
                     id SERIAL PRIMARY KEY,
                     email VARCHAR(255) NOT NULL CHECK(LENGTH(email) > 6) UNIQUE REFERENCES Users(email) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -16,8 +16,8 @@ export const CreateEmailVerificationsTableIfNotExists = async () => {
                     attempts INT NOT NULL DEFAULT 0
                     ); 
                     `);
-    console.log(`Email_Verifications table is ready!`);
+    console.log(`Reset_Password table is ready!`);
   } catch (err) {
-    console.log("Cannot Create table Email_Verifications: ", err);
+    console.log("Cannot Create table Reset_Password: ", err);
   }
 };

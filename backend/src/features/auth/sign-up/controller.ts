@@ -3,7 +3,7 @@ import { NewUserPayload, InsertUserModel, SelectUserModel, DeleteUserModel } fro
 import { BadRequestError } from "../../../errors";
 import { toHash } from "../../../utils/hashes";
 import { deleteTokenCookie } from "../../../utils/jwt";
-import { sendEmailVerification } from "../../../utils/email-verification";
+import { sendEmailVerification } from "../../../utils/send-emails/email-verification";
 import { ApiResponseJson } from "../../../types/api-response-json";
 import { DeleteEmailVerificationModel, SelectEmailVerificationModel } from "../models/email-verification";
 
