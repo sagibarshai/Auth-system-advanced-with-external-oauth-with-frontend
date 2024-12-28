@@ -10,6 +10,7 @@ interface StoredResetPassword {
   updated_at: Date;
   attempts: number;
   expired_in: Date;
+  is_last_reset_completed: boolean;
 }
 export interface ReturnedResetPassword {
   id: number;
@@ -21,8 +22,9 @@ export interface ReturnedResetPassword {
   attempts: number;
   verificationToken: string;
   expiredIn: Date;
+  isLastResetCompleted: boolean;
 }
-interface ResetPasswordPayload extends Omit<ReturnedResetPassword, "id" | "createdAt" | "updatedAt" | "attempts"> {}
+interface ResetPasswordPayload extends Omit<ReturnedResetPassword, "id" | "createdAt" | "updatedAt" | "attempts" | "isLastResetCompleted"> {}
 
 const storedResetPasswordToReturnedResetPassword = (resetPassword: StoredResetPassword): ReturnedResetPassword => {
   return {
@@ -35,6 +37,7 @@ const storedResetPasswordToReturnedResetPassword = (resetPassword: StoredResetPa
     isSent: resetPassword.is_sent,
     verificationToken: resetPassword.verification_token,
     expiredIn: resetPassword.expired_in,
+    isLastResetCompleted: resetPassword.is_last_reset_completed,
   };
 };
 
@@ -43,16 +46,17 @@ export const UpsertResetPasswordModel = async (resetPasswordPayload: ResetPasswo
     const response = await pgClient.query(
       `
         INSERT INTO Reset_Password
-        (email, user_id, is_sent, attempts, verification_token, expired_in)
+        (email, user_id, is_sent, attempts, verification_token, expired_in,is_last_reset_completed)
         VALUES 
-        ($1, $2, $3, 1, $5, $6)
+        ($1, $2, $3, 1, $5, $6, $7)
         ON CONFLICT (email)
         DO UPDATE SET 
           updated_at = $4,
           is_sent = $3,
           attempts = Reset_Password.attempts + 1,
           verification_token = $5,
-          expired_in = $6
+          expired_in = $6,
+          is_last_reset_completed=$7
         RETURNING *;
       `,
       [
@@ -62,6 +66,7 @@ export const UpsertResetPasswordModel = async (resetPasswordPayload: ResetPasswo
         new Date(),
         resetPasswordPayload.verificationToken,
         resetPasswordPayload.expiredIn,
+        false,
       ]
     );
 
@@ -124,6 +129,25 @@ export const UpdateResetPasswordModel = async (resetPasswordPayload: ResetPasswo
       [new Date(), resetPasswordPayload.isSent, resetPasswordPayload.email]
     );
     if (!response.rows.length) throw new Error(`Reset Password with email ${resetPasswordPayload.email} not found `);
+    const storedResetPassword = response.rows[0] as StoredResetPassword;
+
+    return storedResetPasswordToReturnedResetPassword(storedResetPassword);
+  } catch (err) {
+    throw err;
+  }
+};
+export const UpdateIsLastResetCompleted = async (email: string, isLastResetCompleted: boolean): Promise<ReturnedResetPassword> => {
+  try {
+    const response = await pgClient.query(
+      `UPDATE Reset_Password
+        SET is_last_reset_completed=$1
+        WHERE email=$2
+        RETURNING *
+         `,
+      [isLastResetCompleted, email]
+    );
+    if (!response.rows.length)
+      throw new Error(`Update is_last_reset_completed on Reset Password Table filed for user with email ${email} not found `);
     const storedResetPassword = response.rows[0] as StoredResetPassword;
 
     return storedResetPasswordToReturnedResetPassword(storedResetPassword);

@@ -13,7 +13,8 @@ export const CreateResetPasswordTableIfNotExists = async () => {
                     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     expired_in TIMESTAMP NOT NULL,
-                    attempts INT NOT NULL DEFAULT 0
+                    attempts INT NOT NULL DEFAULT 0,
+                    is_last_reset_completed BOOLEAN NOT NULL
                     ); 
                     `);
     console.log(`Reset_Password table is ready!`);

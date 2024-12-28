@@ -50,10 +50,10 @@ export const config = {
   PROD: isProd,
   BASE_URL: baseURL,
   JWT: {
-    EXPIRED_IN: 60 * 1, // in 'sec'
+    EXPIRED_IN: 60 * 60, // in 'sec'
   },
   COOKIES: {
-    JWT_COOKIE_EXPIRED_IN: 1 * 60 * 1000, // in 'ms'
+    JWT_COOKIE_EXPIRED_IN: 60 * 60 * 1000, // in 'ms'
   },
   MAIL: {
     FROM: "noreply@emailverifyee.com",
@@ -77,7 +77,7 @@ export const config = {
   EMAIL_VERIFICATION: {
     MAX_ATTEMPTS: 3,
     VERIFICATION_URL: "http://localhost:5173/auth/email-verification", // do not change, it's match the url of the verification email page that defined on client side
-    EXPIRED_IN: 1, // in minutes
+    EXPIRED_IN: 10, // in minutes
   },
   GOOGLE_OAUTH: {
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
@@ -88,7 +88,7 @@ export const config = {
   },
   RESET_PASSWORD: {
     MAX_ATTEMPTS: 5,
-    EXPIRED_IN: 1, // in min
+    EXPIRED_IN: 10, // in min
     VERIFICATION_URL: "http://localhost:5173/auth/reset-password", // do not change, it's match the url of the reset password page that defined on client side
   },
 };

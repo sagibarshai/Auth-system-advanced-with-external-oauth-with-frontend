@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { SelectUserModel, UpdateUserPassword } from "../models/auth";
 import { BadRequestError, InternalServerError } from "../../../errors";
-import { SelectResetPasswordModel } from "../models/reset-password";
+import { SelectResetPasswordModel, UpdateIsLastResetCompleted } from "../models/reset-password";
 import { config } from "../../../config";
 import { sendResetPasswordEmail } from "../../../utils/send-emails/reset-password";
 import { ApiResponseJson } from "../../../types/api-response-json";
@@ -32,11 +32,13 @@ export const resetPasswordController = async (req: ResetPasswordRequest, res: Re
     if (!resetPassword) return next(BadRequestError([{ message: "Request is not valid" }]));
 
     if (resetPassword.expiredIn < new Date()) return next(BadRequestError([{ message: "Verification token expired" }]));
-
+    if (resetPassword.isLastResetCompleted) return next(BadRequestError([{ message: "This link is no longer valid" }]));
     if (token !== resetPassword.verificationToken) return next(BadRequestError([{ message: "Invalid verification token" }]));
     else {
       const updatedUser = await UpdateUserPassword(user.id, toHash(password));
       if (!updatedUser) return next(InternalServerError([{ message: "Cannot change password" }]));
+
+      await UpdateIsLastResetCompleted(updatedUser.email, true);
 
       const response: ApiResponseJson = {
         message: "Password successfully updated",
@@ -67,7 +69,6 @@ export const sendResetPasswordEmailController = async (req: SendResetPasswordEma
     if (storedResetPassword && storedResetPassword.attempts >= config.RESET_PASSWORD.MAX_ATTEMPTS) {
       return next(BadRequestError([{ message: "User pass the maximum attempts of reset password ", field: "email" }]));
     }
-    console.log("storedResetPassword ", storedResetPassword);
 
     const resetPassword = await sendResetPasswordEmail({ id: user.id, to: user.email });
     if (!resetPassword || !resetPassword.isSent) return next(InternalServerError([{ message: `Cannot send email to ${user.email}` }]));
