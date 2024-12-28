@@ -74,7 +74,7 @@ export const sendResetPasswordEmailController = async (req: SendResetPasswordEma
 
     const response: ApiResponseJson = {
       message: `Email to reset the password successfully sent to ${user.email}`,
-      data: { remainAttempts: config.RESET_PASSWORD.MAX_ATTEMPTS - resetPassword!.attempts },
+      data: { remainAttempts: config.RESET_PASSWORD.MAX_ATTEMPTS - resetPassword!.attempts, email: user.email },
     };
 
     res.status(200).json(response);

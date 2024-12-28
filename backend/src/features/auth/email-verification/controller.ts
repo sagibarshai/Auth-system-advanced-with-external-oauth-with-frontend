@@ -69,7 +69,7 @@ export const resentEmailVerificationController = async (req: ResendEmailVerifica
 
     const response: ApiResponseJson = {
       message: `Email verification successfully sent to ${user.email}`,
-      data: { remainAttempts: config.EMAIL_VERIFICATION.MAX_ATTEMPTS - storedEmailVerification!.attempts },
+      data: { remainAttempts: config.EMAIL_VERIFICATION.MAX_ATTEMPTS - storedEmailVerification!.attempts, email: user.email },
     };
 
     res.status(200).json(response);

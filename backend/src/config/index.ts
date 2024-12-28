@@ -40,13 +40,6 @@ if (!process.env.GOOGLE_CLIENT_ID) {
   throw new Error("GOOGLE_CLIENT_ID must be define inside .env file");
 }
 
-if (!process.env.JWT_EXPIRED_IN) {
-  console.warn("JWT_EXPIRED_IN can be define inside .env file");
-}
-if (!process.env.COOKIES_EXPIRED_IN) {
-  console.warn("COOKIES_EXPIRED_IN can be define inside .env file");
-}
-
 const isProd = Boolean(process.env.NODE_ENV);
 
 const baseURL = isProd ? "https://ProductionDomainUrl.com" : "http://localhost";
@@ -57,10 +50,10 @@ export const config = {
   PROD: isProd,
   BASE_URL: baseURL,
   JWT: {
-    EXPIRED_IN: Number(process.env.JWT_EXPIRED_IN) || 60 * 30, // in 'sec'
+    EXPIRED_IN: 60 * 1, // in 'sec'
   },
   COOKIES: {
-    JWT_COOKIE_EXPIRED_IN: Number(process.env.COOKIES_EXPIRED_IN) || 60 * 60 * 1000, // in 'ms'
+    JWT_COOKIE_EXPIRED_IN: 1 * 60 * 1000, // in 'ms'
   },
   MAIL: {
     FROM: "noreply@emailverifyee.com",
@@ -83,8 +76,8 @@ export const config = {
   },
   EMAIL_VERIFICATION: {
     MAX_ATTEMPTS: 3,
-    VERIFICATION_URL: "http://localhost:5173/auth/email-verification", // change this to the url of the verification email route that you define on client side
-    EXPIRED_IN: 3, // in minutes
+    VERIFICATION_URL: "http://localhost:5173/auth/email-verification", // do not change, it's match the url of the verification email page that defined on client side
+    EXPIRED_IN: 1, // in minutes
   },
   GOOGLE_OAUTH: {
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
@@ -95,7 +88,7 @@ export const config = {
   },
   RESET_PASSWORD: {
     MAX_ATTEMPTS: 5,
-    EXPIRED_IN: 5, // in min
-    VERIFICATION_URL: "http://localhost:5173/auth/reset-password", // change this to the url of the reset password route that you define on client side
+    EXPIRED_IN: 1, // in min
+    VERIFICATION_URL: "http://localhost:5173/auth/reset-password", // do not change, it's match the url of the reset password page that defined on client side
   },
 };

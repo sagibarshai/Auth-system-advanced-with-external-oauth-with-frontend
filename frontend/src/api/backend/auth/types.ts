@@ -22,16 +22,16 @@ export interface SafeUser {
 }
 
 export interface ResendEmailVerification {
-  message: string;
   remainAttempts: number;
+  email: string;
 }
 
 export interface EmailVerificationResponse {
   email: string;
 }
 export interface SendResetPasswordEmailResponse {
-  message: string;
   remainAttempts: number;
+  email: string;
 }
 export interface ResetPasswordResponse {
   email: string;

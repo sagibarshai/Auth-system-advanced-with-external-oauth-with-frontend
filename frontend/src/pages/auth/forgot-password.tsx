@@ -77,6 +77,7 @@ const ForgotPasswordPage: React.FC = () => {
       setErrors(errors?.filter((_, i) => i !== index));
     }
   };
+  console.log("sendResetPasswordEmail.data?.data?.email ", sendResetPasswordEmail.data?.data?.email);
 
   return (
     <FormControl sx={{ width: "500px", height: "auto", maxHeight: "90%", overflowY: "auto", display: "flex", alignItems: "center" }}>
