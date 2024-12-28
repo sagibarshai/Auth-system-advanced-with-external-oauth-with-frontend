@@ -150,10 +150,33 @@ export const UpdateUserIsVerifyModel = async (identifier: string | number): Prom
   try {
     const response = await pgClient.query(
       `UPDATE Users  
-       SET is_verified = $1
-       WHERE ${field} = $2
+       SET is_verified = $1,
+       updated_at = $2
+       WHERE ${field} = $3
        RETURNING *;`,
-      [true, identifier]
+      [true, new Date(), identifier]
+    );
+
+    if (!response.rows.length) throw new Error(`User with ${field} : ${identifier} not found `);
+    const storedUser = response.rows[0] as StoredUser;
+
+    return storedUserToReturnedStoredUser(storedUser);
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const UpdateUserPassword = async (identifier: string | number, password: string): Promise<SafeUser> => {
+  const field = typeof identifier === "number" ? "id" : "email";
+
+  try {
+    const response = await pgClient.query(
+      `UPDATE Users  
+       SET password = $1,
+       updated_at = $2
+       WHERE ${field} = $3
+       RETURNING *;`,
+      [password, new Date(), identifier]
     );
 
     if (!response.rows.length) throw new Error(`User with ${field} : ${identifier} not found `);

@@ -29,3 +29,10 @@ export interface ResendEmailVerification {
 export interface EmailVerificationResponse {
   email: string;
 }
+export interface SendResetPasswordEmailResponse {
+  message: string;
+  remainAttempts: number;
+}
+export interface ResetPasswordResponse {
+  email: string;
+}

@@ -20,7 +20,14 @@ import { backendAxiosInstance } from "../../api/backend/auth/backend-axios-insta
 import { AuthEndPoints } from "../../api/backend/auth/endpoints";
 
 import { Props as InputProps } from "../../components/inputs/text";
-import { ApiResponseJson, CustomErrorMessage, EmailVerificationResponse, ResendEmailVerification, SafeUser } from "../../api/backend/auth/types";
+import {
+  ApiResponseJson,
+  CustomErrorMessage,
+  EmailVerificationResponse,
+  ResendEmailVerification,
+  SafeUser,
+  SendResetPasswordEmailResponse,
+} from "../../api/backend/auth/types";
 import AppAlert from "../../components/alerts";
 
 const SignInPage: React.FC = () => {
@@ -130,7 +137,7 @@ const SignInPage: React.FC = () => {
     setInfo(updatedInfo);
   }, [resendEmailVerificationRequest.data]);
 
-  // update the success from the pageState only for once (use for email verification success after click on the link from mail)
+  // update the success from the pageState only for once (use for email verification success after click on the link from mail and for reset password after change)
   useEffect(() => {
     let updatedSuccess: string[] = [];
     if (pageState.success) updatedSuccess = [...pageState.success];
@@ -161,6 +168,9 @@ const SignInPage: React.FC = () => {
 
   const handleNavigateSignUp = () => {
     appNavigate("SIGNUP");
+  };
+  const handleNavigateForgotPassword = () => {
+    appNavigate("FORGOT_PASSWORD");
   };
 
   return (
@@ -219,6 +229,7 @@ const SignInPage: React.FC = () => {
 
       {/* Navigate to signup */}
       <AppButton variant="text" onClick={handleNavigateSignUp} text={`Don't have an account? Sign up here`} disabled={false} />
+      <AppButton variant="text" onClick={handleNavigateForgotPassword} text={`Forgot your password? Don't worry just click here`} disabled={false} />
     </FormControl>
   );
 };

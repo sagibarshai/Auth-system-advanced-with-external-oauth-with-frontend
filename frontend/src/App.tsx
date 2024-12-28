@@ -37,8 +37,15 @@ const App: React.FC = () => {
     const pathName = getPathName();
     if (data?.data) dispatch(setUser(data.data));
 
-    // Always navigate to the signin page unless it's after Google OAuth or email verification, as those routes require URL parameters and they have their own navigation to signin with page state.
-    if (error && pathName !== Pages.GOOGLE_AUTH && !pathName.startsWith(Pages.EMAIL_VERIFICATION)) appNavigate("SIGNIN");
+    // Always navigate to the signin page unless it's after Google OAuth || email verification || reset password || forgot password, as those routes require URL parameters and they have their own navigation to signin with page state.
+    if (
+      error &&
+      pathName !== Pages.GOOGLE_AUTH &&
+      pathName !== Pages.FORGOT_PASSWORD &&
+      !pathName.startsWith(Pages.EMAIL_VERIFICATION) &&
+      !pathName.startsWith(Pages.RESET_PASSWORD)
+    )
+      appNavigate("SIGNIN");
     else if (data && pathName === "/") appNavigate("HOME");
   }, [error, data?.data]);
 

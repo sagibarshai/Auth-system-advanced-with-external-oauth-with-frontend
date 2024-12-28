@@ -8,6 +8,8 @@ import AuthGooglePage from "../pages/auth/google";
 import HomePage from "../pages/home";
 import SignOutPage from "../pages/auth/signout";
 import ErrorPage from "../pages/error";
+import ResetPasswordPage from "../pages/auth/reset-password";
+import ForgotPasswordPage from "../pages/auth/forgot-password";
 
 export enum Pages {
   ROOT = "/",
@@ -16,8 +18,10 @@ export enum Pages {
   SIGNUP = "/auth/signup",
   GOOGLE_AUTH = "/auth/google",
   EMAIL_VERIFICATION = "/auth/email-verification",
-  HOME = "/home",
   SIGNOUT = "/auth/signout",
+  RESET_PASSWORD = "/auth/reset-password",
+  FORGOT_PASSWORD = "/auth/forget-password",
+  HOME = "/home",
 }
 
 export const router = createBrowserRouter([
@@ -49,6 +53,14 @@ export const router = createBrowserRouter([
           {
             path: Pages["SIGNOUT"],
             element: <SignOutPage />,
+          },
+          {
+            path: Pages["FORGOT_PASSWORD"],
+            element: <ForgotPasswordPage />,
+          },
+          {
+            path: Pages["RESET_PASSWORD"] + "/:id/:token",
+            element: <ResetPasswordPage />,
           },
         ],
       },
