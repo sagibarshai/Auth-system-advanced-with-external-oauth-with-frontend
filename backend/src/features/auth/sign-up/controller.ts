@@ -6,6 +6,7 @@ import { deleteTokenCookie } from "../../../utils/jwt";
 import { sendEmailVerification } from "../../../utils/send-emails/email-verification";
 import { ApiResponseJson } from "../../../types/api-response-json";
 import { DeleteEmailVerificationModel, SelectEmailVerificationModel } from "../models/email-verification";
+import { DeleteResetPasswordModel } from "../models/reset-password";
 
 interface SignUpRequest extends Request {
   body: NewUserPayload;
@@ -27,11 +28,16 @@ export const signUpController = async (req: SignUpRequest, res: Response, next: 
       if (emailVerification && new Date() < emailVerification?.expiredIn)
         return next(BadRequestError([{ message: `User with email ${req.body.email} already exists`, field: "email" }]));
       else {
+        // delete all not verified user data
+
         // delete user data
         await DeleteUserModel(user.email);
 
         // delete email verification data
         await DeleteEmailVerificationModel(user.email);
+
+        // delete reset password data
+        await DeleteResetPasswordModel(user.email);
       }
     }
 

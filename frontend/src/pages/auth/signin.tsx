@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Typography, Grid2, FormControl } from "@mui/material";
 
 import { useInput } from "../../hooks/use-input";
@@ -40,6 +40,11 @@ const SignInPage: React.FC = () => {
 
   const [unVerifyEmail, setUnVerifyEmail] = useState<string | null>(null);
 
+  const onEmailChange = useCallback(
+    (value: string) => setEmail((prev) => ({ ...prev, value, isValid: Boolean(value.match(emailRegex)), showError: true })),
+    []
+  );
+
   // define email
   const [emailState, setEmail, emailStatics] = useInput<InputProps>({
     stateProps: { isValid: false, showError: false, value: "" }, // here please
@@ -48,7 +53,7 @@ const SignInPage: React.FC = () => {
       required: true,
       errorMsg: "Email should be in a valid structure",
       label: "Email",
-      onChange: (value) => setEmail((prev) => ({ ...prev, value, isValid: Boolean(value.match(emailRegex)), showError: true })),
+      onChange: onEmailChange,
     },
   });
 
@@ -122,7 +127,7 @@ const SignInPage: React.FC = () => {
     }
     // set the email from page state only for once
     const email = pageState.data?.email;
-    if (email) setEmail((prev) => ({ ...prev, value: email }));
+    if (email) onEmailChange(email);
   }, [pageState]);
 
   // update the info from the email verification
