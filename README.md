@@ -84,7 +84,7 @@ To stop the project, run: **docker-compose down**
 
 # Core Features and Technologies:
 
-1. # Frontend:
+# 1.  Frontend:
 
 - **Technologies:** React, TypeScript, Material-UI, Redux, React Router, React Hooks.
 
@@ -98,7 +98,7 @@ To stop the project, run: **docker-compose down**
 * Aligned types with the backend to ensure consistency between client and server.
 ---
 
-2. # Backend
+ # 2. Backend
 
 - **Technologies:** Node.js, Express, TypeScript, Postgres
 
