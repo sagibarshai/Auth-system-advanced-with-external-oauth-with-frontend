@@ -209,7 +209,7 @@ To stop the project, run: **docker-compose down**
 
 # Database:
 
-* Uses PostgreSQL for user and verification data:
+* Uses PostgreSQL for user, reset password and email verification data:
 
 includes two tables: 
 
