@@ -9,7 +9,7 @@ This project provides a secure and well-structured application for user authenti
 Prerequisites: **Docker, Git, Node**
 ---
 
-1. # Clone the Repository
+ # 1. Clone the Repository
 
 * git clone https://github.com/sagibarshai/Auth-system-advanced-with-external-oauth-with-frontend.git
 
@@ -18,7 +18,7 @@ Prerequisites: **Docker, Git, Node**
 
 
 
-2. # Install Dependencies:
+# 2. Install Dependencies:
 
 **cd ./frontend && npm install && cd ../backend && npm install**
 
@@ -26,7 +26,7 @@ Prerequisites: **Docker, Git, Node**
 
 
 
-3. # Create the .env File
+# 3. Create the .env File
    
 **Inside the root directory, create a file named .env and add the following environment variables:**
 
@@ -71,12 +71,12 @@ Make sure the URL in the Google Developer Console matches this for proper authen
 ---
 
 
-4. # Running the Project:
+ # 4. Running the Project:
    
 To start the project run : **docker-compose up --build**
 This will build the services and start them using the environment variables defined in .env file in the root directory.
 
-5. # Stopping the Project
+# 5.  Stopping the Project
 
 To stop the project, run: **docker-compose down**
 
@@ -221,5 +221,5 @@ includes two tables:
 
 # Dockerization:
 
-* Dockerfiles and docker-compose.yaml for easy development
+**Dockerfiles and docker-compose.yaml for easy development**
 ---
