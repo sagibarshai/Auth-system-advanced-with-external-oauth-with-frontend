@@ -1,7 +1,7 @@
-# Robust Auth System with Database, Refresh Tokens Cookie-Based JWT Authentication and Client side.
+# Comprehensive Authentication System with Database, Refresh Tokens, JWT, Password Reset, and Responsive Client-Side Features
 
-This project provides a secure and well-structured application for user authentication, featuring email verification, refresh tokens, and cookie-based JWT authentication. It's designed to be a solid foundation for building new projects with robust authentication features.
 
+This project provides a secure and well-structured application for user authentication, featuring email verification, refresh tokens, cookie-based JWT authentication, and password reset functionality. It's designed to be a solid foundation for building new projects with robust authentication features.
 ---
 
 
@@ -42,6 +42,15 @@ POSTGRES_DB=postgres  # Default for initialization, can change later
 
 POSTGRES_HOST=db  # Default for initialization, can change later
 
+
+EMAIL_ADDRESS= # your_email_address
+
+EMAIL_ACCESS_KEY= # your_email_app_token (Learn how to generate it by following this guide: [How to Create an App Password in Gmail](https://youtu.be/YKn6iRlYd_Q?feature=shared))
+
+JWT_KEY= # value (Can be generated using `crypto.randomUUID()` for a unique string)
+
+COOKIE_SECRET= # value (Should be a random string, used for securing cookies)
+
 BACKEND_PORT= # value  (Default port (4000 recommended))
 **Ensure this port matches the one configured in your Google OAuth redirect URI.
 The redirect URI in the Google Developer Console should point to this port for proper authentication.**
@@ -58,13 +67,6 @@ Where <port> corresponds to the BACKEND_PORT specified in your .env file.
 Make sure the URL in the Google Developer Console matches this for proper authentication.**
 
 
-EMAIL_ADDRESS= # your_email_address
-
-EMAIL_ACCESS_KEY= # your_email_app_token (Learn how to generate it by following this guide: [How to Create an App Password in Gmail](https://youtu.be/YKn6iRlYd_Q?feature=shared))
-
-JWT_KEY= # value (Can be generated using `crypto.randomUUID()` for a unique string)
-
-COOKIE_SECRET= # value (Should be a random string, used for securing cookies)
 
 ---
 
@@ -87,8 +89,8 @@ To stop the project, run: **docker-compose down**
 - **Technologies:** React, TypeScript, Material-UI, Redux, React Router, React Hooks.
 
 - **Key Features:**
-* Signup and Signin Pages.
-* Custom hooks for managing requests, inputs, and more.
+* Signup, Signin, Signout, Email-verification,Reset-password, Forgot-password and Home Responsive Pages.
+* Custom hooks for managing requests,inputs, and more.
 * Modern UI built with Material-UI.
 * State management using Redux.
 * Navigation using React Router.
@@ -104,6 +106,7 @@ To stop the project, run: **docker-compose down**
 * JWT-based authentication with refresh tokens.
 * Secure cookie storage for tokens.
 * Email verification and resend functionality with configurable retry limits.
+* Reset password functionality with configurable retry limits.
 * Google OAuth integration for signup/signin.
 * Database configuration using PostgreSQL.
 * Environment variable management for configuration
@@ -120,6 +123,11 @@ To stop the project, run: **docker-compose down**
 * Email Verification: Required for email-based signups to activate accounts.
 
 * Resend Email Verification: Users can request a verification email again, with configurable retry limits.
+
+* Forgot Password: Users can click on Forgot password and get email with token that allows them to choose a new password
+
+* Reset Password: Users can request to reset password, with configurable retry limits.
+
 ---
 
 # Backend End Points:
@@ -136,13 +144,18 @@ To stop the project, run: **docker-compose down**
 
 **resend email verification** - /api/auth/emailVerification/resend, method = post
 
+**send email for reset password** /api/auth/sendResetPasswordEmail, method = post
+
+**reset password** /api/auth/resetPassword, method = post
+
+
 ---
 
 # Security:
 
 * Strong password hashing
 
-* Email verification for increased security
+* Email verification for increased security with expired date (configurable)
 
 * Auto refresh tokens mechanism
 
@@ -181,6 +194,8 @@ To stop the project, run: **docker-compose down**
 * Email Configuration
 
 * Google Configuration
+
+* Reset Password Configuration
 ---
 
 # Structure:
@@ -201,10 +216,10 @@ includes two tables:
 
 1. **Users Table**
 2. **Email Verifications Table**
-   
+3. **Reset Password Table**   
 ---
 
 # Dockerization:
 
-* Dockerfiles and docker-compose.yml for easy development
+* Dockerfiles and docker-compose.yaml for easy development
 ---
